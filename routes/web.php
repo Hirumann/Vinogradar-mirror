@@ -26,10 +26,13 @@ Route::post('/logout', function () {
 Route::middleware('auth')->get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
 
 // Страница агроплана (только для авторизованных пользователей)
-Route::get('/agroplan', [AgroController::class, 'agroplan'])->name('agroplan');
+Route::middleware('auth')->get('/agroplan', [AgroController::class, 'agroplan'])->name('agroplan');
 
 // Страница справочников (только для авторизованных пользователей)
-Route::get('/directory', [DirectoryController::class, 'directory'])->name('directory');
+Route::middleware('auth')->get('/directory', [DirectoryController::class, 'directory'])->name('directory');
 
 // Страница контактов (только для авторизованных пользователей)
-Route::get('/contacts', [AuthController::class, 'contacts'])->name('contacts');
+Route::middleware('auth')->get('/contacts', [AuthController::class, 'contacts'])->name('contacts');
+
+// Страница "Погода" (только для авторизованных пользователей)
+Route::middleware('auth')->get('/weather', [AuthController::class, 'weather'])->name('weather');

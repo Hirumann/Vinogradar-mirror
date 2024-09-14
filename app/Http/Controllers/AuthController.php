@@ -96,6 +96,29 @@ class AuthController extends Controller
         ]);
     }
 
+    public function weather()
+    {
+        $temp = $this->getWeather();
+
+        return view('weather', [
+            'weather' => $temp,
+            'partOfWorld' => $this->getPartOfWorld($temp['wind']['deg']),
+        ]);
+    }
+
+    private function getPartOfWorld($windValue) {
+        $partsOfWorld = ['Северный' => '0', 'Северо-Восточный' => 45, 'Восточный' => 90, 'Юго-Восточный' => 135, 'Южный' => 180, 'Юго-Западный' => 225, 'Западный' => 270, 'Северо-Западный' => 315];
+        foreach ($partsOfWorld as $partOfWorld => $degree) {
+            if ($windValue == $degree) {
+                return $partOfWorld;
+            }
+            $dif = abs($degree - $windValue);
+            if ($dif <= 22.5) {
+                return $partOfWorld;
+            }
+        }
+    }
+
     private function getWeather()
     {
         $apiKey = env('WEATHER_API_KEY'); // Задать ключ через .env
