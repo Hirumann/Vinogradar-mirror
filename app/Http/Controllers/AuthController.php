@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use App\Models\User;
 
 class AuthController extends Controller
@@ -90,6 +91,30 @@ class AuthController extends Controller
     // Личный кабинет
     public function dashboard()
     {
-        return view('dashboard');
+        return view('dashboard', [
+            'weather' => $this->getWeather()
+        ]);
+    }
+
+    private function getWeather()
+    {
+        $city = 'Sevastopol'; // Можно динамически подставлять город пользователя
+        $apiKey = env('WEATHER_API_KEY'); // Задать ключ через .env
+        $url = "http://api.weatherapi.com/v1/current.json?key=$apiKey&q=$city&aqi=no&lang=ru";
+
+        // Используем HTTP клиент Laravel для отправки запроса
+        $response = Http::get($url);
+        
+        if ($response->successful()) {
+            return $response->json();
+        }
+
+        return null; // Если API не вернул ответ
+    }
+
+    // Страница контактов
+    public function contacts()
+    {
+        return view('auth.contacts');
     }
 }

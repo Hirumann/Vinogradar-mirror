@@ -1,10 +1,10 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AgroController;
+use App\Http\Controllers\DirectoryController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-
-
 
 // Экран приветствия
 Route::get('/', [AuthController::class, 'welcome'])->name('welcome');
@@ -24,3 +24,12 @@ Route::post('/logout', function () {
 
 // Личный кабинет (только для авторизованных пользователей)
 Route::middleware('auth')->get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
+
+// Страница агроплана (только для авторизованных пользователей)
+Route::get('/agroplan', [AgroController::class, 'agroplan'])->name('agroplan');
+
+// Страница справочников (только для авторизованных пользователей)
+Route::get('/directory', [DirectoryController::class, 'directory'])->name('directory');
+
+// Страница контактов (только для авторизованных пользователей)
+Route::get('/contacts', [AuthController::class, 'contacts'])->name('contacts');
