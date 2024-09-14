@@ -5,7 +5,11 @@ export default {
     './resources/**/*.js',
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        'fontProjects': ['Cuprum', 'Inter', 'Coda']
+      }
+    },
   },
   plugins: [],
 }
