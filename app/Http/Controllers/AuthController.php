@@ -98,9 +98,8 @@ class AuthController extends Controller
 
     private function getWeather()
     {
-        $city = 'Sevastopol'; // Можно динамически подставлять город пользователя
         $apiKey = env('WEATHER_API_KEY'); // Задать ключ через .env
-        $url = "http://api.weatherapi.com/v1/current.json?key=$apiKey&q=$city&aqi=no&lang=ru";
+        $url = "https://api.openweathermap.org/data/2.5/weather?lat=44.6&lon=33.53&appid=$apiKey&lang=ru";
 
         // Используем HTTP клиент Laravel для отправки запроса
         $response = Http::get($url);

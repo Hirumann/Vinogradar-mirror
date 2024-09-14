@@ -29,17 +29,17 @@
                         <div class="flex justify-between items-center">
                             <div>
                                 <h3>Сейчас:</h3>
-                                <p>Температура: {{ $weather['current']['temp_c'] }}°C</p>
-                                <p>Влажность: {{ $weather['current']['humidity'] }}%</p>
-                                <p>Скорость ветра: {{ round($weather['current']['wind_kph'] / 3.6, 2) }} м/с</p>
-                                <p>{{ ucfirst($weather['current']['condition']['text']) }}</p>
+                                <p>Температура: {{ round($weather['main']['temp'] - 273.15) }}°C</p>
+                                <p>Влажность: {{ $weather['main']['humidity'] }}%</p>
+                                <p>Скорость ветра: {{ round($weather['wind']['speed'], 2) }} м/с</p>
+                                <p>{{ ucfirst($weather['weather'][0]['description']) }}</p>
                             </div>
                             <div class="mr-10">
                                 <h3>Сегодня:</h3>
-                                <p>Температура: {{ $weather['current']['temp_c'] - 2.1 }}°C</p>
-                                <p>Влажность: {{ $weather['current']['humidity'] + 3 }}%</p>
-                                <p>Скорость ветра: {{ round($weather['current']['wind_kph'] / 3.6, 2) + 0.2 }} м/с</p>
-                                <p>{{ ucfirst($weather['current']['condition']['text']) }}</p>
+                                <p>Температура: {{ round($weather['main']['temp'] - 273.15) - 2.1 }}°C</p>
+                                <p>Влажность: {{ $weather['main']['humidity'] + 3 }}%</p>
+                                <p>Скорость ветра: {{ round($weather['wind']['speed'], 2) + 0.2 }} м/с</p>
+                                <p>{{ ucfirst($weather['weather'][0]['description']) }}</p>
                             </div>
                         </div>
                     @else
