@@ -113,7 +113,7 @@ class AuthController extends Controller
                 return $partOfWorld;
             }
             $dif = abs($degree - $windValue);
-            if ($dif <= 22.5) {
+            if ($dif <= 22.5 || $dif > 337.5) {
                 return $partOfWorld;
             }
         }
