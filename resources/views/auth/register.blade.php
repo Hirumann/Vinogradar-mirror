@@ -6,49 +6,52 @@
     <title>Регистрация</title>
     @vite('resources/css/app.css')
 </head>
-<body class="h-screen">
+<body class="h-screen" style="background: url({{ Vite::asset('resources/img/Main_Bg_Img.svg') }}) no-repeat left center / contain fixed;">
     <div class="h-full w-1/3 mx-auto flex flex-col justify-center items-center">
-        <h1 class="text-xl font-bold mb-4">Регистрация</h1>
+        <h1 class="text-3xl font-fontProjects font-bold text-transform: uppercase mb-8 text-inputColor tracking-wider">Регистрация</h1>
 
-        <form action="{{ route('register') }}" method="POST" class="flex flex-col justify-center items-center">
+        <form action="{{ route('register') }}" method="POST" class="w-2/3 flex flex-col justify-center items-center">
             @csrf
             @error('email')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
             @enderror
 
             <!-- Email -->
-            <div class="mb-4">
+            <div class="w-full mb-8">
                 <input type="email" name="email" id="email" placeholder="Почта"
-                        class="mt-1 block w-full border @error('email') border-red-500 @enderror"
+                        class="h-16 pl-4 bg-inputColor/50 placeholder:font-fontProjects placeholder:text-black placeholder:text-xl mt-1 block w-full border @error('email') border-red-500 @enderror"
                         value="{{ old('email') }}">
             </div>
 
-            <!-- Имя -->
-            <div class="mb-4">
-                <input type="text" name="name" id="name" placeholder="Имя"
-                        class="mt-1 block w-full border @error('name') border-red-500 @enderror"
-                        value="{{ old('name') }}">
+            <!-- ФИО -->
+            <div class="w-full mb-8 flex justify-between">
+                <!-- Имя -->
+                <div class="w-[194px]">
+                    <input type="text" name="name" id="name" placeholder="Имя"
+                            class="h-16 pl-4 bg-inputColor/50 placeholder:font-fontProjects placeholder:text-black placeholder:text-xl mt-1 block w-full border @error('name') border-red-500 @enderror"
+                            value="{{ old('name') }}">
 
-                @error('name')
-                    <span class="text-red-500 text-sm">{{ $message }}</span>
-                @enderror
-            </div>
+                    @error('name')
+                        <span class="text-red-500 text-sm">{{ $message }}</span>
+                    @enderror
+                </div>
 
-            <!-- Фамилия -->
-            <div class="mb-4">
-                <input type="text" name="surname" id="surname" placeholder="Фамилия"
-                        class="mt-1 block w-full border @error('surname') border-red-500 @enderror"
-                        value="{{ old('surname') }}">
+                <!-- Фамилия -->
+                <div class="w-[194px]">
+                    <input type="text" name="surname" id="surname" placeholder="Фамилия"
+                            class="h-16 pl-4 bg-inputColor/50 placeholder:font-fontProjects placeholder:text-black placeholder:text-xl mt-1 block w-full border @error('surname') border-red-500 @enderror"
+                            value="{{ old('surname') }}">
 
-                @error('surname')
-                    <span class="text-red-500 text-sm">{{ $message }}</span>
-                @enderror
-            </div>
+                    @error('surname')
+                        <span class="text-red-500 text-sm">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>    
 
             <!-- Пароль -->
-            <div class="mb-4">
+            <div class="w-full mb-8">
                 <input type="password" name="password" id="password" placeholder="Пароль"
-                        class="mt-1 block w-full border @error('password') border-red-500 @enderror">
+                        class="h-16 pl-4 bg-inputColor/50 placeholder:font-fontProjects placeholder:text-black placeholder:text-xl mt-1 block w-full border @error('password') border-red-500 @enderror">
 
                 @error('password')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
@@ -56,14 +59,15 @@
             </div>
 
             <!-- Повторите пароль -->
-            <div class="mb-4">
+            <div class="w-full mb-8">
                 <input type="password" name="password_confirmation" id="password_confirmation" placeholder="Повторите пароль"
-                        class="mt-1 block w-full border @error('password_confirmation') border-red-500 @enderror">
+                        class="h-16 pl-4 bg-inputColor/50 placeholder:font-fontProjects placeholder:text-black placeholder:text-xl mt-1 block w-full border @error('password_confirmation') border-red-500 @enderror">
             </div>
 
-            <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded">Зарегистрироваться</button>
+            <a class="font-fontProjects text-xl tracking-wide" href="{{ route('login') }}">Авторизация</a>
+
+            <button type="submit" class="bg-none font-fontProjects font-bold text-3xl text-black text-transform: uppercase mt-8">Зарегистрироваться</button>
         </form>
-        <a href="{{ route('login') }}">Авторизация</a>
     </div>
 </body>
 </html>

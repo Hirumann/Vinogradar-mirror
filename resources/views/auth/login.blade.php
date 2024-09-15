@@ -9,7 +9,7 @@
 <body class="h-screen" style="background: url({{ Vite::asset('resources/img/Main_Bg_Img.svg') }}) no-repeat left center / contain fixed;">
     <div class="h-full w-1/3 mx-auto flex flex-col justify-center items-center">
         <img class="mx-auto" src="{{ Vite::asset('resources/img/Icon_Login_Screen.svg') }}" alt="Icon_Login_Screen">
-        <h1 class="text-xl text-transform: uppercase font-bold font-fontProjects text-[#00CC66] mb-5 mt-10">войдите в учётную запись</h1>
+        <h1 class="text-xl text-transform: uppercase font-bold font-fontProjects text-inputColor mb-5 mt-10 tracking-wider">войдите в учётную запись</h1>
 
         <form action="{{ route('login') }}" method="POST" class="w-2/3 flex flex-col justify-center items-center">
             @csrf
@@ -35,7 +35,7 @@
                 @enderror
             </div>
 
-            <a class="font-fontProjects text-xl my-4" href="{{ route('register') }}">Регистрация</a>
+            <a class="font-fontProjects text-xl tracking-wider my-4" href="{{ route('register') }}">Регистрация</a>
 
             <button type="submit" class="bg-none font-fontProjects font-bold text-3xl text-black text-transform: uppercase mt-7">Войти</button>
 
