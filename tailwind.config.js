@@ -8,6 +8,9 @@ export default {
     extend: {
       fontFamily: {
         'fontProjects': ['Cuprum', 'Inter', 'Coda']
+      },
+      colors: {
+        'inputColor': '#00CC66'
       }
     },
   },

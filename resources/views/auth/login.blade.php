@@ -6,18 +6,18 @@
     <title>Логин</title>
     @vite('resources/css/app.css')
 </head>
-<body class="h-screen">
+<body class="h-screen" style="background: url({{ Vite::asset('resources/img/Main_Bg_Img.svg') }}) no-repeat left center / contain fixed;">
     <div class="h-full w-1/3 mx-auto flex flex-col justify-center items-center">
-        <h1 class="text-xl font-bold mb-4">Войти</h1>
+        <img class="mx-auto" src="{{ Vite::asset('resources/img/Icon_Login_Screen.svg') }}" alt="Icon_Login_Screen">
+        <h1 class="text-xl text-transform: uppercase font-bold font-fontProjects text-[#00CC66] mb-5 mt-10">войдите в учётную запись</h1>
 
-        <form action="{{ route('login') }}" method="POST" class="flex flex-col justify-center items-center">
+        <form action="{{ route('login') }}" method="POST" class="w-2/3 flex flex-col justify-center items-center">
             @csrf
 
             <!-- Email -->
-            <div class="mb-4">
-                <label for="email" class="block text-sm font-medium">Email</label>
-                <input type="email" name="email" id="email" placeholder="Почта"
-                       class="mt-1 block w-full border @error('email') border-red-500 @enderror"
+            <div class="w-full mb-6 font-fontProjects text-xl">
+                <input  type="email" name="email" id="email" placeholder="Email"
+                       class="h-16 pl-4 bg-inputColor/50 placeholder:font-fontProjects placeholder:text-black placeholder:text-xl mt-1 block w-full border @error('email') border-red-500 @enderror"
                        value="{{ old('email') }}">
 
                 @error('email')
@@ -26,19 +26,20 @@
             </div>
 
             <!-- Пароль -->
-            <div class="mb-4">
-                <label for="password" class="block text-sm font-medium">Пароль</label>
+            <div class="w-full mb-6 font-fontProjects text-xl">
                 <input type="password" name="password" id="password" placeholder="Пароль"
-                       class="mt-1 block w-full border @error('password') border-red-500 @enderror">
+                       class="h-16 pl-4 bg-inputColor/50 placeholder:font-fontProjects placeholder:text-black placeholder:text-xl mt-1 block w-full border @error('password') border-red-500 @enderror">
 
                 @error('password')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
             </div>
 
-            <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded">Войти</button>
+            <a class="font-fontProjects text-xl my-4" href="{{ route('register') }}">Регистрация</a>
+
+            <button type="submit" class="bg-none font-fontProjects font-bold text-3xl text-black text-transform: uppercase mt-7">Войти</button>
+
         </form>
-        <a href="{{ route('register') }}">Регистрация</a>
     </div>
 </body>
 </html>
