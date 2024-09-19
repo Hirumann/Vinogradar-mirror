@@ -171,7 +171,7 @@ class AgroController extends Controller
         ]);
     }
 
-    public function getTasksRange($id)
+    public function getTaskRange($id)
     {
         
         $item = Task::find($id);
@@ -188,15 +188,37 @@ class AgroController extends Controller
 
     public function getGanttData(Request $request)
     {
-        $precision = $request->get('precision');
-        
+        $precision = $request->input('precision', 'week');
         $events = Event::all();
         $tasks = Task::all();
 
-        $data = $events->merge($tasks)->toArray();
+        $ganttData = $this->prepareGanttData($events, $tasks, $precision);
 
-        return response()->json([
-            'data' => $data,
-        ]);
+        return response()->json(['data' => $ganttData]);
+    }
+
+    private function prepareGanttData($events, $tasks, $precision)
+    {
+        $ganttData = [];
+
+        foreach ($events as $event) {
+            $ganttData[] = [
+                'name' => $event->name,
+                'start_date' => $event->start_date,
+                'end_date' => $event->end_date,
+            ];
+        }
+
+        foreach ($tasks as $task) {
+            $ganttData[] = [
+                'name' => $task->name,
+                'start_date' => $task->start_date,
+                'end_date' => $task->end_date,
+            ];
+        }
+
+        // Возможно, ты захочешь изменить структуру данных, в зависимости от precision
+
+        return $ganttData;
     }
 }

@@ -3,7 +3,7 @@
 @section('content')
     <div class="w-full flex flex-col justify-center items-center">
         <!-- Button to download data -->
-        <div class="w-1/2 flex justify-between items-center mb-4">
+        <div class="w-2/3 flex justify-between items-center mb-4">
             <button class="bg-blue-500 text-white px-4 py-2 rounded-lg">Выгрузить данные</button>
             <div>
                 <button id="calendar-view" class="bg-blue-500 text-white px-4 py-2 rounded-l-lg">Календарь</button>
@@ -11,7 +11,7 @@
             </div>
         </div>
 
-        <div id="calendar">
+        <div class="w-2/3" id="calendar">
             <div class="flex justify-between items-center mb-4">
                 <button id="prev-month" class="text-gray-500">← Предыдущий месяц</button>
                 <h2 id="current-month" class="text-xl font-semibold">Сентябрь 2024</h2>
@@ -31,35 +31,31 @@
             <div id="calendar-grid" class="grid grid-cols-7 gap-2"></div>
         </div>
         
-        <div id="gantt" class="hidden w-1/2">
-            <div class="w-full flex justify-between items-center mb-4">
-                <h2 class="text-2xl font-bold">Диаграмма Ганта</h2>
-
-                <div>
-                    <button id="view-day" class="bg-gray-500 text-white px-4 py-2">День</button>
-                    <button id="view-week" class="bg-blue-500 text-white px-4 py-2">Неделя</button>
-                    <button id="view-month" class="bg-gray-500 text-white px-4 py-2">Месяц</button>
-                    <button id="view-quarter" class="bg-gray-500 text-white px-4 py-2">Квартал</button>
-                    <button id="view-year" class="bg-gray-500 text-white px-4 py-2">Год</button>
-                </div>
+        <div id="gantt" class="hidden w-2/3">
+            <div class="flex justify-evenly items-center mb-4">
+                <button id="view-day" class="view-button bg-gray-500 text-white px-4 py-2">День</button>
+                <button id="view-week" class="view-button bg-blue-500 text-white px-4 py-2">Неделя</button>
+                <button id="view-month" class="view-button bg-gray-500 text-white px-4 py-2">Месяц</button>
+                <button id="view-quarter" class="view-button bg-gray-500 text-white px-4 py-2">Квартал</button>
+                <button id="view-year" class="view-button bg-gray-500 text-white px-4 py-2">Год</button>
             </div>
         
             <table class="min-w-full table-auto">
                 <thead>
-                    <tr>
+                    <tr id="dynamic-columns">
                         <th class="border px-4 py-2">№</th>
                         <th class="border px-4 py-2">Название</th>
                         <th class="border px-4 py-2">Длительность (дни)</th>
                         <th class="border px-4 py-2">Начало</th>
                         <th class="border px-4 py-2">Конец</th>
-                        <th id="dynamic-columns"></th>
+                        <!-- Тут будут динамические столбцы -->
                     </tr>
                 </thead>
                 <tbody id="gantt-table-body">
-
+                    <!-- Здесь будет отрисована таблица -->
                 </tbody>
             </table>
-        </div>     
+        </div>
 
         <!-- Modal (hidden) -->
         <div id="modal" class="fixed inset-0 bg-gray-800 bg-opacity-50 hidden flex justify-center items-center">
@@ -81,11 +77,11 @@
             </div>
         </div>
 
+        <input type="text" id="start-date" class="border p-2 w-full hidden" readonly>
+        <input type="text" id="end-date" class="border p-2 w-full hidden" readonly>
         <!-- Range modal (hidden) -->
         <div id="range-modal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center">
             <div class="bg-white p-4 rounded-lg">
-                <input type="text" id="start-date" class="border p-2 w-full hidden" readonly>
-                <input type="text" id="end-date" class="border p-2 w-full hidden" readonly>
                 <h2 class="text-lg font-semibold mb-4">Выбор диапазона</h2>
                 <div class="flex justify-between items-center mb-4">
                     <button id="prev-month-calendar" class="text-gray-500">← Предыдущий месяц</button>
