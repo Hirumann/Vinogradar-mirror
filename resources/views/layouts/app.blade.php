@@ -7,7 +7,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
-    <div class="flex flex-col h-screen">
+    <div class="flex flex-col justify-between h-screen">
         <header>
             <!-- Хедер -->
             <div class="header-container">
@@ -25,7 +25,7 @@
         </header>
     
         <!-- Основной контент -->
-        <main class="flex grow items-center">
+        <main>
             @yield('content')
         </main>
     
