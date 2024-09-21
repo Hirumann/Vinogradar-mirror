@@ -42,5 +42,10 @@ jobs:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./public
+          local-dir: ./public/
           server-dir: /home/u2600287/data/www/corementa.online
+
+          # Для SFTP
+          # server: ${{ secrets.FTP_HOST }}
+          # username: ${{ secrets.FTP_USER }}
+          # password: ${{ secrets.FTP_PASSWORD }}
