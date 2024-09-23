@@ -9,9 +9,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cuprum:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
 </head>
-<body class="h-screen" style="background: url({{ Vite::asset('resources/img/Main_Bg_Img.svg') }}) no-repeat left center / contain fixed;">
+<body class="h-screen" style="background: url({{ asset('img/Main_Bg_Img.svg') }}) no-repeat left center / contain fixed;">
     <div class="h-full w-1/3 mx-auto flex flex-col justify-center items-center">
-        <img class="mx-auto" src="{{ Vite::asset('resources/img/Icon_Login_Screen.svg') }}" alt="Icon_Login_Screen">
+        <img class="mx-auto" src="{{ asset('img/Icon_Login_Screen.svg') }}" alt="Icon_Login_Screen">
         <h1 class="text-xl text-transform: uppercase font-bold font-fontProjects text-inputColor mb-5 mt-10 tracking-wider">войдите в учётную запись</h1>
 
         <form action="{{ route('login') }}" method="POST" class="w-2/3 flex flex-col justify-center items-center">
