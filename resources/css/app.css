@@ -8,6 +8,22 @@
 }
 
 .hide-scrollbar {
-    -ms-overflow-style: none;  /* IE и Edge */
-    scrollbar-width: none;     /* Firefox */
+    -ms-overflow-style: none; /* IE и Edge */
+    scrollbar-width: none; /* Firefox */
+}
+
+.animated-link::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 0;
+    height: 4px;
+    background-color: #000;
+    transition: width 0.4s ease, left 0.4s ease;
+}
+
+.animated-link:hover::after {
+    width: 98%;
+    left: 2%;
 }
