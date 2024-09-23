@@ -17,6 +17,8 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
 
+Route::get('/show-weather', [AuthController::class, 'showWeather'])->name('show-weather');
+
 Route::post('/logout', function () {
     Auth::logout();
     return redirect()->route('welcome');
