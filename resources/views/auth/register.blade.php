@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Регистрация</title>
     @vite('resources/css/app.css')
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cuprum:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
 </head>
 <body class="h-screen" style="background: url({{ Vite::asset('resources/img/Main_Bg_Img.svg') }}) no-repeat left center / contain fixed;">
     <div class="h-full w-1/3 mx-auto flex flex-col justify-center items-center">

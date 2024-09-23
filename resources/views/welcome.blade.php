@@ -12,7 +12,7 @@
 <body style="background: url({{ Vite::asset('resources/img/Bg_Img.svg') }}) no-repeat left center / contain fixed;">
     <div class="flex flex-row-reverse mt-10 mr-20">
         <a class="w-48 h-16 bg-[#4b4b4b] rounded-full flex justify-center items-center text-xl text-white font-bold border-none transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 hover:bg-neutral-800 duration-300" 
-        href="{{ route('login') }}"> <img class="mr-4" src="{{ Vite::asset('resources/img/Icon_Acc.svg') }}" alt="Icon_Acc">войти
+            href="{{ route('login') }}"> <img class="mr-4" src="{{ Vite::asset('resources/img/Icon_Acc.svg') }}" alt="Icon_Acc">войти
         </a>
     </div>
     <div class="w-full flex mx-auto">

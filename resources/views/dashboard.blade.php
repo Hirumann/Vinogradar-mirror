@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto p-4">
+<div class="container mx-auto p-4 text-[24px]">
     <div class="flex justify-between items-start">
         <!-- Ссылки с иконками -->
         <div class="flex flex-col space-y-4">
@@ -20,11 +20,11 @@
         </div>
 
         <!-- Блок с кастомным скроллом -->
-        <div class="relative w-2/3 h-96 bg-gray-100 p-4 overflow-hidden rounded-lg shadow-md">
+        <div class="relative w-2/3 h-[500px] bg-gray-100 p-4 overflow-hidden rounded-lg shadow-md">
             <div id="scrollable-content" class="overflow-y-auto pr-4 h-full hide-scrollbar">
                 <!-- Блок погоды -->
                 <div class="bg-white p-4 rounded-lg shadow-md mb-4">
-                    <h2 class="text-lg font-semibold">Погода</h2>
+                    <h2 class="text-[32px] font-semibold">Погода</h2>
                     @if($weather)
                         <div class="flex justify-between items-center">
                             <div>
@@ -49,13 +49,13 @@
 
                 <!-- Блок уведомлений -->
                 <div class="bg-white p-4 rounded-lg shadow-md mb-4">
-                    <h2 class="text-lg font-semibold">Уведомления</h2>
+                    <h2 class="text-[32px] font-semibold">Уведомления</h2>
                     <p>Нет новых уведомлений.</p>
                 </div>
 
                 <!-- Блок с планами -->
                 <div class="bg-white p-4 rounded-lg shadow-md">
-                    <h2 class="text-lg font-semibold">События и план работ</h2>
+                    <h2 class="text-[32px] font-semibold">События и план работ</h2>
                     <p>Нет событий на сегодня.</p>
                 </div>
             </div>

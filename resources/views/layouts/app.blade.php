@@ -6,8 +6,11 @@
     <title>@yield('title', 'Личный кабинет')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cuprum:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="font-fontProjects">
     <div class="flex flex-col h-screen">
         <header class="h-[150px] w-full flex justify-end items-center bg-[#00CC66] relative">
             <div class="flex justify-center items-center absolute top-full left-20 -translate-y-1/2">
