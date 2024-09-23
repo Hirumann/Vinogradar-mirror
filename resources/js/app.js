@@ -1,8 +1,35 @@
 import "./bootstrap";
-import $, { event } from "jquery";
+import $ from "jquery";
 window.$ = window.jQuery = $;
 
-// scrollbar settings
+if ($("header").length > 0) {
+    $.ajax({
+        url: "/show-weather",
+        method: "GET",
+        success: function (data) {
+            if (data) {
+                const iconUrl =
+                    "http://openweathermap.org/img/w/" +
+                    data.weather[0].icon +
+                    ".png";
+                $("#weather-widget").html(`
+                    <div class="mr-2"><img src=${iconUrl} alt="icon"></div>
+                    <div class="flex flex-col justify-evenly">
+                        <div>${Math.round(data.main.temp - 273.15)}°C</div>
+                        <div>${data.wind.speed} м/с</div>
+                    </div>
+                `);
+            }
+        },
+        error: function () {
+            $("#weather-widget").html("<div>Не удалось загрузить погоду</div>");
+        },
+    });
+}
+
+$("#burger").on("click", function () {
+    $(this).toggleClass("open");
+});
 
 const $content = $("#scrollable-content");
 const $scrollbar = $("#custom-scrollbar");
@@ -541,21 +568,16 @@ function checkDate(date, startDate, endDate) {
                 currentDateNow.toLocaleDateString() ===
                 start.toLocaleDateString()
             ) {
-                console.log("= start");
                 return "bg-green-300";
             } else if (
                 currentDateNow.toLocaleDateString() === end.toLocaleDateString()
             ) {
-                console.log("= end");
                 return "bg-green-500";
             } else if (currentDateNow < start) {
-                console.log("< start");
                 return "bg-white";
             } else if (currentDateNow > end) {
-                console.log("< end");
                 return "bg-white;";
             } else {
-                console.log("else");
                 return "bg-green-400";
             }
         }

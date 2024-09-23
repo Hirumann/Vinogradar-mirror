@@ -11,3 +11,42 @@
     -ms-overflow-style: none; /* IE и Edge */
     scrollbar-width: none; /* Firefox */
 }
+
+.animated-link::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 0;
+    height: 4px;
+    background-color: #000;
+    transition: width 0.4s ease, left 0.4s ease;
+}
+
+.animated-link:hover::after {
+    width: 98%;
+    left: 2%;
+}
+
+/* Базовые стили для полосок */
+.burger-line {
+    display: block;
+    width: 2rem; /* 8 единиц в Tailwind */
+    height: 0.25rem; /* 1 единица в Tailwind */
+    background-color: #1f2937; /* bg-gray-800 */
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    position: relative;
+}
+
+/* Анимация при нажатии */
+#burger.open .burger-line:nth-child(1) {
+    transform: translateY(0.5rem) rotate(45deg); /* Перемещение и поворот первой полоски */
+}
+
+#burger.open .burger-line:nth-child(2) {
+    opacity: 0; /* Скрытие второй полоски */
+}
+
+#burger.open .burger-line:nth-child(3) {
+    transform: translateY(-0.5rem) rotate(-45deg); /* Перемещение и поворот третьей полоски */
+}

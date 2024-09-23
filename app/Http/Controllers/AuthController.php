@@ -104,6 +104,17 @@ class AuthController extends Controller
         }
     }
 
+    public function showWeather()
+    {
+        $weatherData = $this->getWeather();
+
+        if ($weatherData) {
+            return response()->json($weatherData); // Возвращаем JSON-ответ
+        }
+
+        return response()->json(['error' => 'Не удалось получить данные о погоде'], 500); // Если API не вернул ответ
+    }
+
     private function getWeather()
     {
         $apiKey = env('WEATHER_API_KEY'); // Задать ключ через .env
