@@ -33,6 +33,20 @@ $("#burger").on("click", function () {
 
 const $content = $("#scrollable-content");
 const $scrollbar = $("#custom-scrollbar");
+const MONTH_NAMES = [
+    "Январь",
+    "Февраль",
+    "Март",
+    "Апрель",
+    "Май",
+    "Июнь",
+    "Июль",
+    "Август",
+    "Сентябрь",
+    "Октябрь",
+    "Ноябрь",
+    "Декабрь",
+];
 
 if ($content.height()) {
     // Изменяем высоту скроллбара относительно контента
@@ -89,7 +103,7 @@ if ($content.height()) {
     updateScrollbarPosition();
 }
 
-//Переключение между версиями Погоды
+//Switching between versions of the weather page
 
 $("#version1-btn").on("click", function () {
     $("#version1").show();
@@ -117,15 +131,23 @@ $("#version2-btn").on("click", function () {
 $("#calendar-view").on("click", function () {
     $("#calendar").removeClass("hidden");
     $("#gantt").addClass("hidden");
-    $(this).addClass("bg-blue-500").removeClass("bg-gray-500");
-    $("#gantt-view").addClass("bg-gray-500").removeClass("bg-blue-500");
+    $(this)
+        .addClass("bg-[#00CC66]")
+        .removeClass("bg-transparent hover:bg-[#00CC66AA]");
+    $("#gantt-view")
+        .addClass("bg-transparent hover:bg-[#00CC66AA]")
+        .removeClass("bg-[#00CC66]");
 });
 
 $("#gantt-view").on("click", function () {
     $("#gantt").removeClass("hidden");
     $("#calendar").addClass("hidden");
-    $(this).addClass("bg-blue-500").removeClass("bg-gray-500");
-    $("#calendar-view").addClass("bg-gray-500").removeClass("bg-blue-500");
+    $(this)
+        .addClass("bg-[#00CC66]")
+        .removeClass("bg-transparent hover:bg-[#00CC66AA]");
+    $("#calendar-view")
+        .addClass("bg-transparent hover:bg-[#00CC66AA]")
+        .removeClass("bg-[#00CC66]");
     $(".view-button")
         .removeClass("bg-gray-500 bg-blue-500")
         .addClass("bg-gray-500");
@@ -148,7 +170,8 @@ function renderCalendar(year, month) {
             let calendarHtml = "";
 
             for (let i = 1; i < (firstDayOfMonth || 7); i++) {
-                calendarHtml += "<div></div>";
+                calendarHtml +=
+                    '<div class="w-full border-r-2 border-b-2 border-white bg-[#00CC6680]"></div>';
             }
 
             for (let day = 1; day <= daysInMonth; day++) {
@@ -163,14 +186,16 @@ function renderCalendar(year, month) {
                 );
 
                 calendarHtml += `
-                    <div class="p-2 bg-white border rounded-md hover:bg-gray-100 cursor-pointer calendar-day" data-date="${date}">
-                        ${date}<br>${dayEvents.length} события<br>${dayTasks.length} план
+                    <div class="w-full flex flex-col justify-evenly items-center bg-[#00CC6680] border-r-2 border-b-2 border-white cursor-pointer calendar-day" data-date="${date}">
+                        <div class="text-white text-[9px]">${date}</div>
+                        <div class="w-[120px] h-[30px] rounded-[5px] bg-white flex justify-center items-center text-[10px]">События - ${dayEvents.length}</div>
+                        <div class="w-[120px] h-[30px] rounded-[5px] bg-white flex justify-center items-center text-[10px]">Плановые работы - ${dayTasks.length}</div>
                     </div>
                 `;
             }
 
             $("#calendar-grid").html(calendarHtml);
-            $("#current-month").text(`${year} ${month + 1}`);
+            $("#current-month").text(`${MONTH_NAMES[month]} ${year}`);
 
             function isDateInRange(date, startDate, endDate) {
                 const arrayDate = date.split(".");
@@ -219,7 +244,9 @@ $("#calendar").on("click", ".calendar-day", function () {
     let date = $(this).data("date");
     $("#modal-date").text(date);
     loadModalData(date);
-    $("#modal").removeClass("hidden");
+
+    // Устанавливаем display:flex, а затем анимируем
+    $("#modal").removeClass("hidden").addClass("flex").hide().fadeIn(300); // Плавное появление с display: flex
 });
 
 // Close main-modal
@@ -230,7 +257,10 @@ $("#modal").on("click", function (event) {
 });
 
 function closeModal(modal) {
-    $(modal).addClass("hidden");
+    // Плавное скрытие
+    $(modal).fadeOut(300, function () {
+        $(this).addClass("hidden").removeClass("flex"); // Устанавливаем display: none после завершения анимации
+    });
 }
 
 function loadModalData(date) {
@@ -247,20 +277,24 @@ function loadModalData(date) {
 
             events.forEach((event) => {
                 $("#event-list").append(`
-                    <li>
-                        ${event.name}
-                        <button class="set-range" data-id="${event.id}" data-type="event">Диапазон</button>
-                        <button class="delete-event" data-id="${event.id}">Удалить</button>
+                    <li class="flex justify-between items-center w-full px-4 mb-2 bg-white rounded-[8px] text-black text-[20px]">
+                        <p class="w-2/3 break-words">${event.name}</p>
+                        <div class="w-1/4 flex justify-between items-center">
+                            <button class="set-range bg-[#00CC66] rounded-md w-[23px] h-[23px] flex justify-center items-center" data-id="${event.id}" data-type="event">${window.calendarIcon}</button>
+                            <button class="delete-event w-[21px] h-[21px]" data-id="${event.id}">${window.bucketIcon}</button>
+                        </div>
                     </li>
                 `);
             });
 
             tasks.forEach((task) => {
                 $("#task-list").append(`
-                    <li>
-                        ${task.name}
-                        <button class="set-range" data-id="${task.id}" data-type="task">Диапазон</button>
-                        <button class="delete-task" data-id="${task.id}">Удалить</button>
+                    <li class="flex justify-between items-center w-full px-4 mb-2 bg-white rounded-[8px] text-black text-[20px]">
+                        <p class="w-2/3 break-words">${task.name}</p>
+                        <div class="w-1/4 flex justify-between items-center">
+                            <button class="set-range bg-[#00CC66] rounded-md w-[23px] h-[23px] flex justify-center items-center" data-id="${task.id}" data-type="task">${window.calendarIcon}</button>
+                            <button class="delete-task w-[21px] h-[21px]" data-id="${task.id}">${window.bucketIcon}</button>
+                        </div>
                     </li>
                 `);
             });
@@ -269,25 +303,92 @@ function loadModalData(date) {
 }
 
 $("#add-event").on("click", function () {
-    let eventName = prompt("Введите название события:");
-    if (eventName) {
-        $.ajax({
-            url: "/add-event",
-            method: "POST",
-            data: {
-                name: eventName,
-                start_date: $("#modal-date").text(),
-                end_date: $("#modal-date").text(),
-                _token: $('meta[name="csrf-token"]').attr("content"),
-            },
-            success: function () {
-                loadModalData($("#modal-date").text());
-                renderCalendar(
-                    currentDate.getFullYear(),
-                    currentDate.getMonth()
-                );
-            },
-        });
+    // Показываем модальное окно
+    $("#event-modal").removeClass("hidden").addClass("flex").hide().fadeIn(300);
+    $("#event-name-input").trigger("focus");
+});
+
+$("#add-task").on("click", function () {
+    // Показываем модальное окно
+    $("#task-modal").removeClass("hidden").addClass("flex").hide().fadeIn(300);
+    $("#task-name-input").trigger("focus");
+});
+
+$("#event-modal").on("click", function (event) {
+    if ($(event.target).is("#event-modal")) {
+        closeModal("#event-modal");
+    }
+});
+
+$("#task-modal").on("click", function (event) {
+    if ($(event.target).is("#task-modal")) {
+        closeModal("#task-modal");
+    }
+});
+
+// Сохранение события
+$("#event-name-input").on("keydown", function (e) {
+    if (e.key === "Enter") {
+        let eventName = $("#event-name-input").val();
+        if (eventName) {
+            $.ajax({
+                url: "/add-event",
+                method: "POST",
+                data: {
+                    name: eventName,
+                    start_date: $("#modal-date").text(),
+                    end_date: $("#modal-date").text(),
+                    _token: $('meta[name="csrf-token"]').attr("content"),
+                },
+                success: function () {
+                    loadModalData($("#modal-date").text());
+                    renderCalendar(
+                        currentDate.getFullYear(),
+                        currentDate.getMonth()
+                    );
+                    $("#event-name-input").val("");
+                    // Закрываем модальное окно
+                    closeModal("#event-modal");
+                },
+            });
+        }
+    } else if (e.key === "Escape") {
+        // Отменяем ввод, удаляя input
+        $("#event-name-input").val("");
+        closeModal("#event-modal");
+    }
+});
+
+// Сохранение события
+$("#task-name-input").on("keydown", function (e) {
+    if (e.key === "Enter") {
+        let taskName = $("#task-name-input").val();
+        if (taskName) {
+            $.ajax({
+                url: "/add-task",
+                method: "POST",
+                data: {
+                    name: taskName,
+                    start_date: $("#modal-date").text(),
+                    end_date: $("#modal-date").text(),
+                    _token: $('meta[name="csrf-token"]').attr("content"),
+                },
+                success: function () {
+                    loadModalData($("#modal-date").text());
+                    renderCalendar(
+                        currentDate.getFullYear(),
+                        currentDate.getMonth()
+                    );
+                    $("#task-name-input").val("");
+                    // Закрываем модальное окно
+                    closeModal("#task-modal");
+                },
+            });
+        }
+    } else if (e.key === "Escape") {
+        // Отменяем ввод, удаляя input
+        $("#task-name-input").val("");
+        closeModal("#task-modal");
     }
 });
 
@@ -303,29 +404,6 @@ $(document).on("click", ".delete-event", function () {
             renderCalendar(currentDate.getFullYear(), currentDate.getMonth());
         },
     });
-});
-
-$("#add-task").on("click", function () {
-    let taskName = prompt("Введите название плановой работы:");
-    if (taskName) {
-        $.ajax({
-            url: "/add-task",
-            method: "POST",
-            data: {
-                name: taskName,
-                start_date: $("#modal-date").text(),
-                end_date: $("#modal-date").text(),
-                _token: $('meta[name="csrf-token"]').attr("content"),
-            },
-            success: function () {
-                loadModalData($("#modal-date").text());
-                renderCalendar(
-                    currentDate.getFullYear(),
-                    currentDate.getMonth()
-                );
-            },
-        });
-    }
 });
 
 $(document).on("click", ".delete-task", function () {
@@ -362,7 +440,11 @@ $(document).on("click", ".set-range", function () {
             $("#mini-calendar").data("id", id);
             $("#mini-calendar").data("type", type);
 
-            $("#range-modal").removeClass("hidden");
+            $("#range-modal")
+                .removeClass("hidden")
+                .addClass("flex")
+                .hide()
+                .fadeIn(300);
             loadMiniCalendar(
                 currentDateMiniCalendar.getFullYear(),
                 currentDateMiniCalendar.getMonth(),
@@ -373,21 +455,22 @@ $(document).on("click", ".set-range", function () {
     });
 });
 
+// Закрытие модального окна
+$("#range-modal").on("click", function (event) {
+    if ($(event.target).is("#range-modal")) {
+        closeModal("#range-modal");
+    }
+});
+
 function loadMiniCalendar(year, month, startDate, endDate) {
     let daysInMonth = new Date(year, month + 1, 0).getDate();
     let firstDayOfMonth = new Date(year, month, 1).getDay();
     let calendarHtml = "";
-    console.log("start Date: " + startDate + "End Date: " + endDate);
 
     // Добавляем пустые ячейки для выравнивания первого дня месяца
     for (let i = 1; i < (firstDayOfMonth || 7); i++) {
         calendarHtml += "<div></div>";
     }
-
-    // Получаем startDate и endDate из полей ввода
-
-    console.log(`Start Date: ${startDate}`);
-    console.log(`End Date: ${endDate}`);
 
     // Генерация HTML для календаря
     for (let day = 1; day <= daysInMonth; day++) {
@@ -397,14 +480,14 @@ function loadMiniCalendar(year, month, startDate, endDate) {
         const dayClass = checkDate(date, startDate, endDate);
 
         calendarHtml += `
-            <div class="p-2 ${dayClass} border rounded-md cursor-pointer mini-calendar-day" data-date="${date}">
+            <div class="m-2 p-2 ${dayClass} rounded-md cursor-pointer mini-calendar-day" data-date="${date}">
                 ${day}
             </div>
         `;
     }
 
     $("#mini-calendar").html(calendarHtml);
-    $("#current-month-calendar").text(`${year}-${month + 1}`);
+    $("#current-month-calendar").text(`${MONTH_NAMES[month]} ${year}`);
 
     updateCalendarDayStyles(startDate, endDate);
 }
@@ -485,33 +568,28 @@ function checkDate(date, startDate, endDate) {
                 currentDateNow.toLocaleDateString() ===
                 start.toLocaleDateString()
             ) {
-                console.log("= start");
-                return "bg-green-400";
+                return "bg-green-300";
             } else if (
                 currentDateNow.toLocaleDateString() === end.toLocaleDateString()
             ) {
-                console.log("= end");
-                return "bg-blue-500";
+                return "bg-green-500";
             } else if (currentDateNow < start) {
-                console.log("< start");
                 return "bg-white";
             } else if (currentDateNow > end) {
-                console.log("< end");
                 return "bg-white;";
             } else {
-                console.log("else");
-                return "bg-red-300";
+                return "bg-green-400";
             }
         }
     } else if (start) {
         if (
             currentDateNow.toLocaleDateString() === start.toLocaleDateString()
         ) {
-            return "bg-green-400";
+            return "bg-green-300";
         }
     } else if (end) {
         if (currentDateNow.toLocaleDateString() === end.toLocaleDateString()) {
-            return "bg-blue-500";
+            return "bg-green-500";
         }
     }
 
@@ -558,175 +636,6 @@ function saveDateRange() {
     });
 }
 
-// Закрытие модального окна
-$("#range-modal").on("click", function (event) {
-    if ($(event.target).is("#range-modal")) {
-        closeModal("#range-modal");
-    }
-});
-
-// //miniCalendar
-// //Opens mini-calendar
-// $(document).on('click', '.set-range', function() {
-//     let id = $(this).data('id');
-//     let type = $(this).data('type');
-
-//     $.ajax({
-//         url: `/get-${type}-range/${id}`,
-//         method: 'GET',
-//         cache: false,
-//         success: function(response) {
-//             $('#start-date').val(response.start_date);
-//             $('#end-date').val(response.end_date);
-
-//             $('#mini-calendar').data('id', id);
-//             $('#mini-calendar').data('type', type);
-
-//             $('#range-modal').removeClass('hidden');
-//             loadMiniCalendar(currentDate.getFullYear(), currentDate.getMonth());
-//         }
-//     });
-// });
-
-// function loadMiniCalendar(year, month) {
-//     let daysInMonth = new Date(year, month + 1, 0).getDate();
-//     let firstDayOfMonth = new Date(year, month, 1).getDay();
-//     let calendarHtml = '';
-//     let dayClass = 'bg-white';
-
-//     let startDate = $('#start-date').val();
-//     let endDate = $('#end-date').val();
-
-//     for (let i = 1; i < (firstDayOfMonth || 7); i++) {
-//         calendarHtml += '<div></div>';
-//     }
-
-//     for (let day = 1; day <= daysInMonth; day++) {
-//         const date = `${day < 10 ? '0' + day : day}.${month + 1 < 10 ? '0' + (month + 1) : (month + 1)}.${year}`;
-//         dayClass = checkDate(date, startDate, endDate);
-
-//         calendarHtml += `
-//             <div class="p-2 ${dayClass} border rounded-md cursor-pointer mini-calendar-day" data-date="${date}">
-//                 ${date.split('.')[0]}
-//             </div>
-//         `;
-//     }
-
-//     $('#mini-calendar').html(calendarHtml);
-//     $('#current-month-calendar').text(`${year} ${month + 1}`);
-//     let numberOfClicks = 0;
-//     let lastStartDate = new Date(startDate).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
-
-//     $('#mini-calendar').on('click', '.mini-calendar-day', function() {
-//         let selectedDate = $(this).data('date');
-//         const arrayDate = selectedDate.split('.');
-//         const usefulDate = new Date(parseInt(arrayDate[2]), parseInt(arrayDate[1]) - 1, parseInt(arrayDate[0]));
-//         const lastDate = usefulDate.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
-
-//         switch (numberOfClicks) {
-//             case 0:
-//                 $('#start-date').val(lastDate);
-//                 $('#end-date').val(null);
-//                 $('.mini-calendar-day').removeClass('bg-red-300 bg-blue-500 bg-green-400 bg-white');
-//                 $(this).addClass('bg-green-400');
-//                 lastStartDate = new Date($('#start-date').val()).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
-//                 numberOfClicks++;
-//                 break;
-//             case 1:
-//                 if (lastDate > lastStartDate) {
-//                     $('#end-date').val(lastDate);
-//                     $(this).addClass('bg-blue-500');
-//                     saveDateRange();
-//                     loadModalData($('#modal-date').text());
-//                     renderCalendar(currentDate.getFullYear(), currentDate.getMonth());
-//                     numberOfClicks++;
-//                     updateCalendarDayStyles();
-//                 }
-//                 break;
-//             default:
-//                 numberOfClicks = 1;
-//                 $('#start-date').val(lastDate);
-//                 $('#end-date').val(null);
-//                 lastStartDate = new Date($('#start-date').val()).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
-//                 $('.mini-calendar-day').removeClass('bg-red-300 bg-blue-500 bg-green-400 bg-white');
-//                 $(this).addClass('bg-green-400');
-//                 break;
-//         }
-//     });
-//     updateCalendarDayStyles();
-// }
-
-// function updateCalendarDayStyles() {
-//     let startDate = $('#start-date').val();
-//     let endDate = $('#end-date').val();
-//     $('.mini-calendar-day').each(function() {
-//         let dayDate = $(this).data('date');
-//         let dayClass = 'bg-white';
-
-//         dayClass = checkDate(dayDate, startDate, endDate, dayClass);
-
-//         $(this).removeClass('bg-red-300 bg-blue-500 bg-green-400 bg-white').addClass(dayClass);
-//     });
-// }
-
-// function checkDate(date, startDate, endDate) {
-//     const arrayDate = date.split('.');
-//     const usefulDate = new Date(parseInt(arrayDate[2]), parseInt(arrayDate[1]) - 1, parseInt(arrayDate[0]));
-//     const lastDate = usefulDate.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
-//     const lastStartDate = new Date(startDate).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
-//     const lastEndDate = new Date(endDate).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
-//     let dayClass = 'bg-white';
-
-//     if ((lastDate > lastStartDate && lastDate < lastEndDate) || (lastDate === lastStartDate && lastDate === lastEndDate)) {
-//         return dayClass = 'bg-red-300';
-//     } else if (lastDate === lastStartDate) {
-//         return dayClass = 'bg-green-400';
-//     } else if (lastDate === lastEndDate) {
-//         return dayClass = 'bg-blue-500';
-//     } else {
-//         return dayClass = 'bg-white';
-//     }
-// }
-
-// $('#prev-month-calendar').on('click', function() {
-//     currentDate.setMonth(currentDate.getMonth() - 1);
-//     loadMiniCalendar(currentDate.getFullYear(), currentDate.getMonth());
-// });
-
-// $('#next-month-calendar').on('click', function() {
-//     currentDate.setMonth(currentDate.getMonth() + 1);
-//     loadMiniCalendar(currentDate.getFullYear(), currentDate.getMonth());
-// });
-
-// function saveDateRange() {
-//     let id = $('#mini-calendar').data('id');
-//     let type = $('#mini-calendar').data('type');
-//     let startDate = $('#start-date').val();
-//     let endDate = $('#end-date').val();
-
-//     // AJAX-запрос для сохранения диапазона
-//     $.ajax({
-//         url: `/set-${type}-range/${id}`,
-//         method: 'POST',
-//         data: {
-//             start_date: startDate,
-//             end_date: endDate,
-//             _token: $('meta[name="csrf-token"]').attr('content')
-//         },
-//         success: function() {
-//             loadModalData($('#modal-date').text());
-//             renderCalendar(currentDate.getFullYear(), currentDate.getMonth());
-//         }
-//     });
-// }
-
-// // Закрытие модального окна
-// $('#range-modal').on('click', function(event) {
-//     if ($(event.target).is('#range-modal')) {
-//         closeModal('#range-modal');
-//     }
-// });
-
 //Gantt
 // Изначально загружаем диаграмму с недельной точностью
 loadGantt("week");
@@ -735,9 +644,9 @@ loadGantt("week");
 $(".view-button").on("click", function () {
     const view = $(this).attr("id").split("-")[1];
     $(".view-button")
-        .removeClass("bg-gray-500 bg-blue-500")
-        .addClass("bg-gray-500");
-    $(this).removeClass("bg-gray-500").addClass("bg-blue-500");
+        .removeClass("text-white text-black")
+        .addClass("text-black");
+    $(this).removeClass("text-black").addClass("text-white");
     loadGantt(view);
 });
 
@@ -766,13 +675,13 @@ function buildGanttTable(data, view) {
     let startDate = new Date();
 
     if (view === "day") {
-        columnCount = 10;
+        columnCount = 14;
     } else if (view === "week") {
-        columnCount = 8;
+        columnCount = 10;
         // Определяем начальную дату для недельного вида
         startDate.setDate(startDate.getDate() - startDate.getDay()); // Переходим к началу недели
     } else if (view === "month") {
-        columnCount = 9;
+        columnCount = 14;
         // Определяем начальную дату для месячного вида
         startDate.setDate(1); // Переходим к началу месяца
     } else if (view === "quarter") {
@@ -781,7 +690,7 @@ function buildGanttTable(data, view) {
         startDate.setMonth(startDate.getMonth() - (startDate.getMonth() % 3)); // Переходим к началу квартала
         startDate.setDate(1);
     } else if (view === "year") {
-        columnCount = 4;
+        columnCount = 8;
         // Определяем начальную дату для годового вида
         startDate.setMonth(0); // Переходим к началу года
         startDate.setDate(1);

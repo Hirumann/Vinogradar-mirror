@@ -11,7 +11,12 @@ class AgroController extends Controller
     // Страница Агроплана
     public function agroplan()
     {
-        return view('agroplan.agroplan');
+        $svgIconMiniCalendar = file_get_contents(public_path('svg/mini_calendar_icon.svg'));
+        $svgIconBucket = file_get_contents(public_path('svg/bucket_icon.svg'));
+        return view('agroplan.agroplan', [
+            'iconMiniCalendar' => $svgIconMiniCalendar,
+            'iconBucket' => $svgIconBucket,
+        ]);
     }
 
     public function getDayData(Request $request)
