@@ -40,17 +40,17 @@
         <footer class="h-[150px] w-full text-[32px]">
             <div class="h-full w-full flex justify-around items-center text-center">
                 <div class="w-1/3 flex justify-start ml-20 ">
-                    <a href="{{ route('dashboard') }}" class="mr-32">на главную</a>
-                    <a href="{{ route('contacts') }}">контакты</a>
+                    <a href="{{ route('dashboard') }}" class="mr-32 relative animated-link">на главную</a>
+                    <a href="{{ route('contacts') }}" class="relative animated-link">контакты</a>
                 </div>
                 <div class="w-1/2 flex justify-center items-center">
                     <div class="mr-5 transition-all duration-200 ease-in-out hover:-rotate-12">{!! file_get_contents(public_path('svg/logo_mini_icon.svg')) !!}</div>
                     <p>&copy; ООО "Цифровой виноградник"</p>
                 </div>
                 <div class="w-1/4 flex justify-end mr-20">
-                    <a href="https://vk.com/club226846983" target="_blank" class="mr-5 transition-all hover:scale-110 relative animated-link">{!! file_get_contents(public_path('svg/vk_icon.svg')) !!}</a>
-                    <a href="https://t.me/smartvineyard" target="_blank" class="mr-5 transition-all hover:scale-110 relative animated-link">{!! file_get_contents(public_path('svg/tg_icon.svg')) !!}</a>
-                    <a href="https://dzen.ru/id/66b1ca3525f9e02d01bebf8d" target="_blank" class="transition-all hover:scale-110 relative animated-link">{!! file_get_contents(public_path('svg/dzen_icon.svg')) !!}</a>
+                    <a href="https://vk.com/club226846983" target="_blank" class="mr-5 transition-all hover:scale-110">{!! file_get_contents(public_path('svg/vk_icon.svg')) !!}</a>
+                    <a href="https://t.me/smartvineyard" target="_blank" class="mr-5 transition-all hover:scale-110">{!! file_get_contents(public_path('svg/tg_icon.svg')) !!}</a>
+                    <a href="https://dzen.ru/id/66b1ca3525f9e02d01bebf8d" target="_blank" class="transition-all hover:scale-110 ">{!! file_get_contents(public_path('svg/dzen_icon.svg')) !!}</a>
                 </div>
             </div>
         </footer>
