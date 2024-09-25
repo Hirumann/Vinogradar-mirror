@@ -22,13 +22,15 @@ class AgroController extends Controller
     public function getDayData(Request $request)
     {
         $date = date('Y-m-d', strtotime($request->input('start_date')));
-        
+
         $events = Event::where('start_date', '<=', $date)
                         ->where('end_date', '>=', $date)
+                        ->where('user_id', auth()->id()) // Учет пользователя
                         ->get();
 
         $tasks = Task::where('start_date', '<=', $date)
                         ->where('end_date', '>=', $date)
+                        ->where('user_id', auth()->id()) // Учет пользователя
                         ->get();
 
         return response()->json([
@@ -39,19 +41,21 @@ class AgroController extends Controller
 
     public function getCalendarData($year, $month)
     {
-        $events = Event::where(function ($query) use ($year, $month) {
-            $query->whereYear('start_date', $year)
-                  ->orWhereYear('end_date', $year)
-                  ->whereMonth('start_date', $month)
-                  ->orWhereMonth('end_date', $month);
-        })->get();
+        $events = Event::where('user_id', auth()->id())  // Фильтруем по user_id
+            ->where(function ($query) use ($year, $month) {
+                $query->whereYear('start_date', $year)
+                    ->orWhereYear('end_date', $year)
+                    ->whereMonth('start_date', $month)
+                    ->orWhereMonth('end_date', $month);
+            })->get();
 
-        $tasks = Task::where(function ($query) use ($year, $month) {
-            $query->whereYear('start_date', $year)
-                  ->orWhereYear('end_date', $year)
-                  ->whereMonth('start_date', $month)
-                  ->orWhereMonth('end_date', $month);
-        })->get();
+        $tasks = Task::where('user_id', auth()->id())  // Фильтруем по user_id
+            ->where(function ($query) use ($year, $month) {
+                $query->whereYear('start_date', $year)
+                    ->orWhereYear('end_date', $year)
+                    ->whereMonth('start_date', $month)
+                    ->orWhereMonth('end_date', $month);
+            })->get();
 
         return response()->json([
             'events' => $events,
@@ -72,6 +76,7 @@ class AgroController extends Controller
                 'name' => $data['name'],
                 'start_date' => date('Y-m-d', strtotime($data['start_date'])),
                 'end_date' => date('Y-m-d', strtotime($data['end_date'])),
+                'user_id' => auth()->id(), // Привязка к пользователю
             ]);
         } else {
             return response()->json(['error' => 'No data provided'], 400);
@@ -93,6 +98,7 @@ class AgroController extends Controller
                 'name' => $data['name'],
                 'start_date' => date('Y-m-d', strtotime($data['start_date'])),
                 'end_date' => date('Y-m-d', strtotime($data['end_date'])),
+                'user_id' => auth()->id(), // Привязка к пользователю
             ]);
         } else {
             return response()->json(['error' => 'No data provided'], 400);
@@ -103,7 +109,9 @@ class AgroController extends Controller
 
     public function deleteEvent($id)
     {
-        $event = Event::find($id);
+        $event = Event::where('id', $id)
+                  ->where('user_id', auth()->id()) // Только события текущего пользователя
+                  ->first();
 
         if (!$event) {
             return response()->json(['error' => 'Event not found'], 404);
@@ -116,7 +124,9 @@ class AgroController extends Controller
 
     public function deleteTask($id)
     {
-        Task::destroy($id);
+        Task::where('id', $id)
+            ->where('user_id', auth()->id()) // Только события текущего пользователя
+            ->first();
 
         return response()->json(['success' => true]);
     }
@@ -194,8 +204,8 @@ class AgroController extends Controller
     public function getGanttData(Request $request)
     {
         $precision = $request->input('precision', 'week');
-        $events = Event::all();
-        $tasks = Task::all();
+        $events = Event::where('user_id', auth()->id())->get(); // Учитываем пользователя
+        $tasks = Task::where('user_id', auth()->id())->get(); // Учитываем пользователя
 
         $ganttData = $this->prepareGanttData($events, $tasks, $precision);
 
