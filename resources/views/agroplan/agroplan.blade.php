@@ -12,7 +12,7 @@
         <div class="h-[85%] w-full flex justify-center items-center">
             <!-- Button to download data -->
             <div class="h-[767px] w-1/5 flex flex-col justify-between items-center ml-10 mr-10">
-                <button class="w-[271px] h-[59px] mt-16 bg-[#00CC66] rounded-[20px] text-black text-2xl uppercase shadow-main hover:bg-[#00BB55] active:bg-[#11DD77] transition duration-75 ease-in-out">Выгрузить данные</button>
+                <a href="{{ route('export.step1') }}" class="flex justify-center items-center w-[271px] h-[59px] mt-16 bg-[#00CC66] rounded-[20px] text-black text-2xl uppercase shadow-main hover:bg-[#00BB55] active:bg-[#11DD77] transition duration-75 ease-in-out">Выгрузить данные</a>
                 <div class="w-full flex justify-around items-end">
                     <button id="calendar-view" class="bg-[#00CC66] text-black px-4 py-2 rounded-[20px] transition ease-in-out uppercase text-[20px]">{!! file_get_contents(public_path('svg/calendar_icon.svg')) !!}Календарь</button>
                     <button id="gantt-view" class="bg-transparent hover:bg-[#00CC66AA] text-black px-4 py-2 rounded-[20px] transition ease-in-out uppercase text-[20px]">{!! file_get_contents(public_path('svg/gantt_icon.svg')) !!}Диаграмма</button>

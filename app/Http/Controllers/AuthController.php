@@ -84,10 +84,11 @@ class AuthController extends Controller
     public function weather()
     {
         $temp = $this->getWeather();
+        $temp ? $partOfWorld = $this->getPartOfWorld($temp['wind']['deg']) : $partOfWorld = null;
 
         return view('weather', [
             'weather' => $temp,
-            'partOfWorld' => $this->getPartOfWorld($temp['wind']['deg']),
+            'partOfWorld' => $partOfWorld,
         ]);
     }
 
@@ -117,7 +118,7 @@ class AuthController extends Controller
 
     private function getWeather()
     {
-        $apiKey = env('WEATHER_API_KEY'); // Задать ключ через .env
+        $apiKey = env('WEATHER_API_KEY');
         $url = "https://api.openweathermap.org/data/2.5/weather?lat=44.6&lon=33.53&appid=$apiKey&lang=ru";
 
         // Используем HTTP клиент Laravel для отправки запроса

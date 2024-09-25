@@ -1,3 +1,5 @@
+"use strict";
+
 import "./bootstrap";
 import $ from "jquery";
 window.$ = window.jQuery = $;
@@ -560,8 +562,6 @@ function checkDate(date, startDate, endDate) {
     start ? start.setHours(0, 0, 0, 0) : null;
     end ? end.setHours(0, 0, 0, 0) : null;
 
-    console.log(currentDateNow, start, end);
-
     if (start && end) {
         if (currentDateNow >= start || currentDateNow <= end) {
             if (
@@ -974,3 +974,134 @@ function applyPartialCellPaint(
         })
         .append($overlay);
 }
+
+let numberOfClicksExport = 0; // Глобальная переменная для отслеживания количества кликов
+let startDateExport = null;
+let endDateExport = null;
+let currentDateExport = new Date();
+
+loadExport(currentDateExport.getFullYear(), currentDateExport.getMonth());
+
+function loadExport(year, month) {
+    let daysInMonth = new Date(year, month + 1, 0).getDate();
+    let firstDayOfMonth = new Date(year, month, 1).getDay();
+    let calendarHtml = "";
+
+    // Добавляем пустые ячейки для выравнивания первого дня месяца
+    for (let i = 1; i < (firstDayOfMonth || 7); i++) {
+        calendarHtml += "<div></div>";
+    }
+
+    // Генерация HTML для календаря
+    for (let day = 1; day <= daysInMonth; day++) {
+        const date = `${day < 10 ? "0" + day : day}.${
+            month + 1 < 10 ? "0" + (month + 1) : month + 1
+        }.${year}`;
+        const dayClass = "bg-white";
+
+        calendarHtml += `
+            <div class="m-2 p-2 ${dayClass} rounded-md cursor-pointer mini-calendar-day" data-date="${date}">
+                ${day}
+            </div>
+        `;
+    }
+
+    $("#mini-calendar-export").html(calendarHtml);
+    $("#current-month-export").text(`${MONTH_NAMES[month]} ${year}`);
+}
+
+// Обработчик кликов по дням в мини-календаре
+$("#mini-calendar-export").on("click", ".mini-calendar-day", function () {
+    let selectedDate = $(this).data("date");
+    let day = selectedDate.split(".")[0];
+    let month = selectedDate.split(".")[1];
+    let year = selectedDate.split(".")[2];
+    const formattedDate = formatDateCalendar(new Date(year, month - 1, day));
+
+    switch (numberOfClicksExport) {
+        case 0:
+            startDateExport = formattedDate;
+            endDateExport = null;
+            $("#start-date-export").val(startDateExport);
+            $("#end-date-export").val(null);
+            $(".mini-calendar-day").removeClass(
+                "bg-red-300 bg-blue-500 bg-green-400"
+            );
+            $(this).addClass("bg-green-400");
+            numberOfClicksExport++;
+            break;
+        case 1:
+            if (formattedDate < startDateExport) {
+                break;
+            }
+            endDateExport = formattedDate;
+            $("#end-date-export").val(endDateExport);
+            $(".mini-calendar-day").removeClass(
+                "bg-red-300 bg-blue-500 bg-green-400"
+            );
+            $(this).addClass("bg-blue-500");
+            numberOfClicksExport = 0;
+            break;
+        default:
+            break;
+    }
+    updateCalendarDayStyles(startDateExport, endDateExport);
+});
+
+$("#prev-month-export").on("click", function () {
+    currentDateExport.setMonth(currentDateExport.getMonth() - 1);
+    loadExport(currentDateExport.getFullYear(), currentDateExport.getMonth());
+});
+
+$("#next-month-export").on("click", function () {
+    currentDateExport.setMonth(currentDateExport.getMonth() + 1);
+    loadExport(currentDateExport.getFullYear(), currentDateExport.getMonth());
+});
+
+$("#next-btn").on("click", function () {
+    if (startDateExport && endDateExport) {
+        const events = $("#events-select").val();
+        const tasks = $("#tasks-select").val();
+        const comment = $("#comment").val() || "";
+
+        if (events.length !== 0 || tasks.length !== 0) {
+            $.ajax({
+                url: "/export/step-2",
+                type: "GET",
+                data: {
+                    start_date: startDateExport,
+                    end_date: endDateExport,
+                    events: events, // если это массив, передаем напрямую
+                    tasks: tasks, // если это массив или строка
+                    comment: comment, // комментарий
+                },
+                success: function (response) {
+                    $("#content").html(response);
+                },
+                error: function (xhr, status, error) {
+                    // Здесь обрабатываем ошибку
+                    console.log("Ошибка: ", error);
+                },
+            });
+        } else {
+            alert(
+                "Необходимо выбрать хотя бы одно событие или плановую работу!"
+            );
+        }
+    } else {
+        alert("Сначала нужно выбрать диапазон дат для экспорта!");
+    }
+});
+
+$("#backup-btn").on("click", function () {
+    $.ajax({
+        url: "/export/backup",
+        type: "POST",
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
+        success: function (data) {
+            alert(data.message);
+        },
+    });
+});
