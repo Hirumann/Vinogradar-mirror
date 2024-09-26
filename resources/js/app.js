@@ -545,7 +545,7 @@ function updateCalendarDayStyles(startDate, endDate) {
         let dayDate = $(this).data("date");
         let dayClass = checkDate(dayDate, startDate, endDate);
         $(this)
-            .removeClass("bg-red-300 bg-blue-500 bg-green-400 bg-white")
+            .removeClass("bg-green-300 bg-green-500 bg-green-400 bg-white")
             .addClass(dayClass);
     });
 }
