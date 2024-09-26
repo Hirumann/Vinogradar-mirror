@@ -547,7 +547,7 @@ function updateCalendarDayStyles(startDate, endDate) {
         let dayDate = $(this).data("date");
         let dayClass = checkDate(dayDate, startDate, endDate);
         $(this)
-            .removeClass("bg-red-300 bg-blue-500 bg-green-400 bg-white")
+            .removeClass("bg-green-300 bg-green-500 bg-green-400 bg-white")
             .addClass(dayClass);
     });
 }
@@ -1041,12 +1041,51 @@ $("#mini-calendar-export").on("click", ".mini-calendar-day", function () {
             );
             $(this).addClass("bg-blue-500");
             numberOfClicksExport = 0;
+            updateLists();
             break;
         default:
             break;
     }
     updateCalendarDayStyles(startDateExport, endDateExport);
 });
+
+function updateLists() {
+    let startDate = $("#start-date-export").val();
+    let endDate = $("#end-date-export").val();
+
+    $.ajax({
+        url: "/get-events-tasks",
+        method: "GET",
+        data: {
+            start_date: startDate,
+            end_date: endDate,
+        },
+        success: function (response) {
+            // Обновляем списки событий и задач
+            $("#events-select").empty();
+            $("#tasks-select").empty();
+
+            // Добавляем события в список
+            response.events.forEach(function (event) {
+                $("#events-select").append(
+                    `
+                    <label>
+                        <input type="checkbox" name="events[]" value="${event.id}">
+                        ${event.name} (${event.start_date} - ${event.end_date})
+                    </label><br>
+                    `
+                );
+            });
+
+            // Добавляем задачи в список
+            response.tasks.forEach(function (task) {
+                $("#tasks-select").append(
+                    `<option value="${task.id}">${task.name} (${task.start_date} - ${task.end_date})</option>`
+                );
+            });
+        },
+    });
+}
 
 $("#prev-month-export").on("click", function () {
     currentDateExport.setMonth(currentDateExport.getMonth() - 1);
@@ -1060,8 +1099,20 @@ $("#next-month-export").on("click", function () {
 
 $("#next-btn").on("click", function () {
     if (startDateExport && endDateExport) {
-        const events = $("#events-select").val();
-        const tasks = $("#tasks-select").val();
+        // Собираем все выбранные события (чекбоксы с именем events[])
+        const events = $("input[name='events[]']:checked")
+            .map(function () {
+                return this.value;
+            })
+            .get();
+
+        // Собираем все выбранные плановые работы (чекбоксы с именем tasks[])
+        const tasks = $("input[name='tasks[]']:checked")
+            .map(function () {
+                return this.value;
+            })
+            .get();
+
         const comment = $("#comment").val() || "";
 
         if (events.length !== 0 || tasks.length !== 0) {
@@ -1104,4 +1155,8 @@ $("#backup-btn").on("click", function () {
             alert(data.message);
         },
     });
+});
+
+$(document).on("click", "#back-btn", function () {
+    location.reload(); // Перезагружает страницу
 });

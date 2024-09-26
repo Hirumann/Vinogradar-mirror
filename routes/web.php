@@ -65,6 +65,7 @@ Route::get('/get-gantt-data', [AgroController::class, 'getGanttData']);
 
 // Routes for export page
 Route::middleware('auth')->get('/export', [ExportController::class, 'exportStep1'])->name('export.step1');
+Route::get('/get-events-tasks', [ExportController::class, 'getEventsTasks']);
 Route::middleware('auth')->get('/export/step-2', [ExportController::class, 'exportStep2'])->name('export.step2');
 Route::post('/export/backup', [ExportController::class, 'backupData'])->name('export.backup');
 Route::post('/export/download-pdf', [ExportController::class, 'downloadPDF'])->name('export.download.pdf');

@@ -26,19 +26,29 @@
 
     <div>
         <h4>Select Events</h4>
-        <select id="events-select" multiple>
-            @foreach ($events as $event)
-                <option value="{{ $event->id }}">{{ $event->name }} ({{ $event->start_date }} - {{ $event->end_date }})</option>
-            @endforeach
-        </select>
+        <div id="events-select">
+            @if (isset($events))
+                @foreach ($events as $event)
+                    <label>
+                        <input type="checkbox" name="events[]" value="{{ $event->id }}">
+                        {{ $event->name }} ({{ $event->start_date }} - {{ $event->end_date }})
+                    </label><br>
+                @endforeach
+            @endif
+        </div>
     </div>
 
     <div>
         <h4>Select Tasks</h4>
-        <select id="tasks-select" multiple>
-            @foreach ($tasks as $task)
-                <option value="{{ $task->id }}">{{ $task->name }} ({{ $task->start_date }} - {{ $task->end_date }})</option>
-            @endforeach
+        <div id="tasks-select">
+            @if (isset($tasks))
+                @foreach ($tasks as $task)
+                    <label>
+                        <input type="checkbox" name="tasks[]" value="{{ $task->id }}">
+                        {{ $task->name }} ({{ $task->start_date }} - {{ $task->end_date }})
+                    </label><br>
+                @endforeach
+            @endif
         </select>
     </div>
 

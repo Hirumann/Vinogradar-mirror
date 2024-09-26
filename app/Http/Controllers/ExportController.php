@@ -6,20 +6,45 @@ use Illuminate\Http\Request;
 use App\Models\Event;
 use App\Models\Task;
 use App\Models\Backup;
-use PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ExportController extends Controller
 {
     public function exportStep1()
     {
         $userId = auth()->id();
-        $events = Event::where('user_id', $userId)->get();
-        $tasks = Task::where('user_id', $userId)->get();
 
         $last_backup = Backup::where('user_id', $userId)->latest()->first();
 
-        return view('export.export-step1', compact('events', 'tasks', 'last_backup'));
+        return view('export.export-step1', compact('last_backup'));
     }
+
+    public function getEventsTasks(Request $request)
+    {
+        $startDate = $request->start_date;
+        $endDate = $request->end_date;
+        $userId = auth()->id();
+
+        $events = Event::where('user_id', $userId)
+                    ->where(function ($query) use ($startDate, $endDate) {
+                        $query->where('start_date', '<=', $endDate)
+                            ->where('end_date', '>=', $startDate);
+                    })
+                    ->get();
+
+        $tasks = Task::where('user_id', $userId)
+                    ->where(function ($query) use ($startDate, $endDate) {
+                        $query->where('start_date', '<=', $endDate)
+                            ->where('end_date', '>=', $startDate);
+                    })
+                    ->get();
+
+        return response()->json([
+            'events' => $events,
+            'tasks' => $tasks
+        ]);
+    }
+
 
     public function exportStep2(Request $request)
     {
