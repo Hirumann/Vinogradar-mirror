@@ -124,9 +124,15 @@ class AgroController extends Controller
 
     public function deleteTask($id)
     {
-        Task::where('id', $id)
-            ->where('user_id', auth()->id()) // Только события текущего пользователя
-            ->first();
+        $task = Task::where('id', $id)
+                  ->where('user_id', auth()->id()) // Только события текущего пользователя
+                  ->first();
+
+        if (!$task) {
+            return response()->json(['error' => 'Event not found'], 404);
+        }
+
+        $task->delete();
 
         return response()->json(['success' => true]);
     }
