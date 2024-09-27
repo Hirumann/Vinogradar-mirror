@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AgroController;
 use App\Http\Controllers\ExportController;
+use App\Http\Controllers\FieldJournalController;
 use App\Http\Controllers\DirectoryController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -69,3 +70,14 @@ Route::get('/get-events-tasks', [ExportController::class, 'getEventsTasks']);
 Route::middleware('auth')->get('/export/step-2', [ExportController::class, 'exportStep2'])->name('export.step2');
 Route::post('/export/backup', [ExportController::class, 'backupData'])->name('export.backup');
 Route::post('/export/download-pdf', [ExportController::class, 'downloadPDF'])->name('export.download.pdf');
+
+
+// Routes for Field Journal
+Route::middleware('auth')->get('/field-journal', [FieldJournalController::class, 'index']);
+Route::post('/field-journal/store', [FieldJournalController::class, 'store']);
+Route::post('/field-journal/update/{id}', [FieldJournalController::class, 'update']);
+Route::delete('/field-journal/delete/{id}', [FieldJournalController::class, 'destroy']);
+Route::post('/field-journal/upload-photo/{id}', [FieldJournalController::class, 'uploadPhoto']);
+Route::delete('/field-journal/delete-photo/{id}', [FieldJournalController::class, 'deletePhoto']);
+Route::post('/field-journal/create', [FieldJournalController::class, 'create']);
+
