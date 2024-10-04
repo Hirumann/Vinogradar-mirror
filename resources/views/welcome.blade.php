@@ -29,5 +29,8 @@
             </div>
         </div>
     </div>
+    <footer class="w-full flex justify-center items-center">
+        <div>{{ asset('img/fckthslg.png') }}</div>
+    </footer>
 </body>
 </html>

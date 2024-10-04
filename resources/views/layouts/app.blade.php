@@ -44,7 +44,6 @@
                     <a href="{{ route('contacts') }}" class="relative animated-link">контакты</a>
                 </div>
                 <div class="w-1/2 flex justify-center items-center">
-                    <div class="mr-5 transition-all duration-200 ease-in-out hover:-rotate-12">{!! file_get_contents(public_path('img/fckthslg.png')) !!}</div>
                     <div class="mr-5 transition-all duration-200 ease-in-out hover:-rotate-12">{!! file_get_contents(public_path('svg/logo_mini_icon.svg')) !!}</div>
                     <p>&copy; ООО "Цифровой виноградник"</p>
                 </div>
