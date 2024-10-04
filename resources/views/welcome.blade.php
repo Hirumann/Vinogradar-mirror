@@ -17,7 +17,7 @@
     </div>
     <div class="w-full flex mx-auto">
         <div class="w-2/5 ml-24">
-            <img class="max-w-720 max-h-793" src="{{ asset('img/Vino_Logo.svg') }}" alt="Logo">
+            <img class="max-w-[720px] max-h-[793px]" src="{{ asset('img/Vino_Logo.svg') }}" alt="Logo">
         </div>
         <div class="flex flex-col justify-evenly font-bold font-fontProjects w-1/2">
             <h1 class="w-full text-[150px] leading-[180px]">Цифровой Виноградник</h1>
