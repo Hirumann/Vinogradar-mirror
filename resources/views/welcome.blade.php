@@ -30,7 +30,7 @@
         </div>
     </div>
     <footer class="w-full flex justify-center items-center">
-        <div>{{ asset('img/fckthslg.png') }}</div>
+        <a href="https://fasie.ru/"><img src="{{ asset('img/fckthslg.png') }}" alt="Link"></a>
     </footer>
 </body>
 </html>
