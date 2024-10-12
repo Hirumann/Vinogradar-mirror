@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container mx-auto p-6">
+    <div class="container my-32 mx-auto p-6">
         <!-- Ссылки для переключения версий -->
         <div class="flex justify-center mb-4">
             <button id="version1-btn" class="px-4 py-2 bg-blue-500 text-white rounded-lg mr-4">Погода</button>

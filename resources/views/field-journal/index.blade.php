@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto px-4">
+<div class="container my-32 mx-auto px-4">
     <h1 class="text-2xl font-bold mb-6">Полевой журнал</h1>
 
     <table class="table-auto w-full text-left border-collapse">

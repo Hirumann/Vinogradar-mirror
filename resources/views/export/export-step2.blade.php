@@ -1,4 +1,4 @@
-<div>
+<div class="my-32 mx-auto">
     <h3>Export Data - Step 2</h3>
 
     <h4>Selected Date Range: {{ $startDate }} to {{ $endDate }}</h4>

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto p-4 text-[24px]">
+<div class="container my-32 mx-auto p-4 text-[24px]">
     <div class="flex justify-between items-start">
         <!-- Ссылки с иконками -->
         <div class="flex flex-col space-y-4">

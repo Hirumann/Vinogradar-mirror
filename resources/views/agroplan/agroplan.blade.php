@@ -39,7 +39,7 @@
                 <div id="calendar-grid" class="w-full h-[650px] grid grid-cols-7"></div>
             </div>
             
-            <div id="gantt" class="hidden w-[1435px] mt-20 mr-10 h-[600px] bg-[#00CC66]">
+            <div id="gantt" class="hidden w-[1435px] mt-20 mr-10 h-[767px] bg-[#00CC66]">
                 <div class="flex justify-evenly items-center my-4">
                     <button id="view-day" class="view-button bg-transparent font-bold text-black text-[20px] px-4 py-2 uppercase">День</button>
                     <button id="view-week" class="view-button bg-transparent font-bold text-white text-[20px] px-4 py-2 uppercase">Неделя</button>
@@ -48,7 +48,7 @@
                     <button id="view-year" class="view-button bg-transparent font-bold text-black text-[20px] px-4 py-2 uppercase">Год</button>
                 </div>
             
-                <div class="overflow-scroll max-h-[80%]">
+                <div class="overflow-y-scroll max-h-[80%]">
                     <table class="min-w-[94%] min-h-[80%] table-auto bg-white mx-10">
                         <thead>
                             <tr id="dynamic-columns">

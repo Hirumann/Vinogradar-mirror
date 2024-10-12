@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cuprum:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
 </head>
 <body class="font-fontProjects">
-    <div class="flex flex-col h-screen">
+    <div class="flex flex-col h-full">
         <header class="h-[150px] w-full flex justify-end items-center bg-[#00CC66] relative">
             <div class="flex justify-center items-center absolute top-full left-20 -translate-y-1/2">
                 <button id="burger" class="relative w-10 h-10 focus:outline-none mr-8 mt-20">
