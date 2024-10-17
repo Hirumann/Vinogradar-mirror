@@ -56,7 +56,7 @@
 </div>
 
 <!-- Модальное окно для увеличенного фото -->
-<div id="photo-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center w-full h-auto">
+<div id="photo-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 items-center justify-center w-full h-auto">
     <div class="bg-white p-4">
         <img id="modal-photo" src="" alt="Photo" class="w-full h-[800px]">
         <button id="delete-photo-btn" class="mt-4 bg-red-500 text-white p-2">Удалить фото</button>

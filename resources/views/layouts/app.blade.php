@@ -4,14 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Личный кабинет')</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css'])
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cuprum:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
 </head>
 <body class="font-fontProjects">
-    <div class="flex flex-col h-full">
+    <div class="flex flex-col h-full relative">
         <header class="h-[150px] w-full flex justify-end items-center bg-[#00CC66] relative">
             <div class="flex justify-center items-center absolute top-full left-20 -translate-y-1/2">
                 <button id="burger" class="relative w-10 h-10 focus:outline-none mr-8 mt-20">
@@ -19,7 +20,7 @@
                     <span class="burger-line my-1"></span>
                     <span class="burger-line bottom-0"></span>
                 </button>
-                <div class="mr-5">{!! file_get_contents(public_path('svg/avatar_big_icon.svg')) !!}</div>
+                <a href="{{ route('dashboard') }}"><div class="mr-5">{!! file_get_contents(public_path('svg/avatar_big_icon.svg')) !!}</div></a>
                 <div>
                     <div class="text-white text-[30px] uppercase font-bold">{{ Auth::user()->surname}} {{ Auth::user()->name }}</div>
                     <div id="weather-widget" class="flex justify-start items-center text-[20px] font-bold mt-5"></div>
@@ -33,6 +34,17 @@
             </div>
         </header>
 
+        <div id="burger-modal" class="hidden z-50 w-[330px] bg-[#00CC66] absolute left-20 top-64 flex-col drop-shadow-2xl rounded-[22px]">
+            <h3 class="text-center w-full text-[48px] mt-6 uppercase">Меню</h3>
+            <ul class="flex flex-col text-[32px] text-black my-6 ml-10">
+                <li><a href="{{ route('weather') }}" class="mr-32 relative animated-link">Погода</a></li>
+                <li><a href="{{ route('agroplan') }}" class="mr-32 relative animated-link">Агроплан</a></li>
+                <li><a href="{{ route('field-journal') }}" class="mr-32 relative animated-link">Полевой журнал</a></li>
+                <li><a href="{{ route('directory') }}" class="mr-32 relative animated-link">Справочники</a></li>
+                <li><a href="{{ route('contacts') }}" class="mr-32 relative animated-link">Контакты</a></li>
+            </ul>
+        </div>
+    
         <main class="flex grow items-center">
             @yield('content')
         </main>
@@ -55,5 +67,6 @@
             </div>
         </footer>
     </div>
+    @vite(['resources/js/app.js'])
 </body>
 </html>
