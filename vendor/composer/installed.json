@@ -843,6 +843,7 @@
                 "type": "git",
                 "url": "https://github.com/filp/whoops.git",
                 "reference": "befcdc0e5dce67252aa6322d82424be928214fa2"
+                "reference": "befcdc0e5dce67252aa6322d82424be928214fa2"
             },
             "dist": {
                 "type": "zip",
