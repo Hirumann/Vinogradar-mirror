@@ -32,11 +32,11 @@
                 </form>
             </div>
         </header>
-    
+
         <main class="flex grow items-center">
             @yield('content')
         </main>
-    
+
         <footer class="h-[150px] w-full text-[32px]">
             <div class="h-full w-full flex justify-around items-center text-center">
                 <div class="w-1/3 flex justify-start ml-20 ">
