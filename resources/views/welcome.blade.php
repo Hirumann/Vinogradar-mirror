@@ -17,7 +17,7 @@
     </div>
     <div class="w-full flex mx-auto">
         <div class="w-2/5 ml-24">
-            <img class="max-w-720 max-h-793" src="{{ asset('img/Vino_Logo.svg') }}" alt="Logo">
+            <img class="max-w-[720px] max-h-[715px]" src="{{ asset('img/Vino_Logo.svg') }}" alt="Logo">
         </div>
         <div class="flex flex-col justify-evenly font-bold font-fontProjects w-1/2">
             <h1 class="w-full text-[150px] leading-[180px]">Цифровой Виноградник</h1>
@@ -29,5 +29,8 @@
             </div>
         </div>
     </div>
+    <footer class="w-full flex justify-center items-center">
+        <a href="https://fasie.ru/"><img src="{{ asset('img/fckthslg.png') }}" alt="Link"></a>
+    </footer>
 </body>
 </html>
