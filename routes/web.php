@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AgroController;
+use App\Http\Controllers\ExportController;
 use App\Http\Controllers\DirectoryController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -39,26 +40,32 @@ Route::middleware('auth')->get('/contacts', [AuthController::class, 'contacts'])
 // Страница "Погода" (только для авторизованных пользователей)
 Route::middleware('auth')->get('/weather', [AuthController::class, 'weather'])->name('weather');
 
-// Route to get day data
+// Routes to get day data
 Route::get('/get-day-data', [AgroController::class, 'getDayData']);
 Route::get('/calendar-data/{year}/{month}', [AgroController::class, 'getCalendarData']);
 
-// Route for add event and task
+// Routes for add event and task
 Route::post('/add-event', [AgroController::class, 'addEvent']);
 Route::post('/add-task', [AgroController::class, 'addTask']);
 
-// Route for delete event and task
+// Routes for delete event and task
 Route::delete('/delete-event/{id}', [AgroController::class, 'deleteEvent'])->name('delete-event');
 Route::delete('/delete-task/{id}', [AgroController::class, 'deleteTask'])->name('delete-task');
 
-// Route for update event and task range
+// Routes for update event and task range
 Route::post('/set-event-range/{id}', [AgroController::class, 'setEventRange']);
 Route::post('/set-task-range/{id}', [AgroController::class, 'setTaskRange']);
 
-// Route for get event and task range
+// Routes for get event and task range
 Route::get('/get-event-range/{id}', [AgroController::class, 'getEventRange']);
 Route::get('/get-task-range/{id}', [AgroController::class, 'getTaskRange']);
 
-
 // Route to get Gantt data
 Route::get('/get-gantt-data', [AgroController::class, 'getGanttData']);
+
+// Routes for export page
+Route::middleware('auth')->get('/export', [ExportController::class, 'exportStep1'])->name('export.step1');
+Route::get('/get-events-tasks', [ExportController::class, 'getEventsTasks']);
+Route::middleware('auth')->get('/export/step-2', [ExportController::class, 'exportStep2'])->name('export.step2');
+Route::post('/export/backup', [ExportController::class, 'backupData'])->name('export.backup');
+Route::post('/export/download-pdf', [ExportController::class, 'downloadPDF'])->name('export.download.pdf');
