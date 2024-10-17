@@ -73,11 +73,28 @@ Route::post('/export/download-pdf', [ExportController::class, 'downloadPDF'])->n
 
 
 // Routes for Field Journal
-Route::middleware('auth')->get('/field-journal', [FieldJournalController::class, 'index']);
+Route::middleware('auth')->get('/field-journal', [FieldJournalController::class, 'index'])->name('field-journal');
 Route::post('/field-journal/store', [FieldJournalController::class, 'store']);
 Route::post('/field-journal/update/{id}', [FieldJournalController::class, 'update']);
 Route::delete('/field-journal/delete/{id}', [FieldJournalController::class, 'destroy']);
 Route::post('/field-journal/upload-photo/{id}', [FieldJournalController::class, 'uploadPhoto']);
 Route::delete('/field-journal/delete-photo/{id}', [FieldJournalController::class, 'deletePhoto']);
 Route::post('/field-journal/create', [FieldJournalController::class, 'create']);
+
+// Routes for Directory
+Route::post('/directory/{tableName}/create', [DirectoryController::class, 'createRow']);
+Route::delete('/directory/{tableName}/delete/{rowId}', [DirectoryController::class, 'deleteRow']);
+Route::post('/directory/{tableName}/update/{id}', [DirectoryController::class, 'updateRow']);
+Route::get('/directory/{tableName}', [DirectoryController::class, 'getAllRows']);
+
+Route::get('/directory/{table}/{rowId}/operations', [DirectoryController::class, 'getOperations']);
+Route::post('/directory/{table}/{rowId}/operations/add', [DirectoryController::class, 'addOperation']);
+Route::delete('/directory/{table}/{rowId}/operations/delete/{operationId}', [DirectoryController::class, 'deleteOperation']);
+
+Route::get('/get-date-ranges/{table}/{rowId}', [DirectoryController::class, 'getDateRanges']);
+Route::post('/set-date-range/{table}/{rowId}', [DirectoryController::class, 'setDateRange']);
+Route::post('/remove-date-range/{table}/{rowId}/{rangeId}', [DirectoryController::class, 'removeDateRange']);
+
+Route::post('/upload-photo/{table}/{id}', [DirectoryController::class, 'uploadPhoto']);
+Route::delete('/delete-photo/{table}/{id}', [DirectoryController::class, 'deletePhoto']);
 
