@@ -3,7 +3,7 @@
 @section('content')
 <input type="text" id="start-date-export" class="border p-2 w-full hidden" readonly>
 <input type="text" id="end-date-export" class="border p-2 w-full hidden" readonly>
-<div id="content" class="flex justify-center items-center">
+<div id="content" class="flex justify-center items-center my-32 mx-auto">
     <div class="w-[660px] bg-white px-4 pb-4 rounded-[32px] border border-black flex flex-col items-center">
         <div class="flex justify-between items-center mb-4">
             <button id="prev-month-export" class="w-[32px] h-[32px]">{!! file_get_contents(public_path('svg/left_arrow.svg')) !!}</button>

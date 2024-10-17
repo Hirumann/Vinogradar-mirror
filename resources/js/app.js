@@ -1160,3 +1160,200 @@ $("#backup-btn").on("click", function () {
 $(document).on("click", "#back-btn", function () {
     location.reload(); // Перезагружает страницу
 });
+
+//Field Journal
+let isProcessing = false; // Флаг для предотвращения многократных запросов
+
+$(".field-input").on("input", function () {
+    let row = $(this).closest("tr");
+    let id = row.find(".field-id").data("db-id"); // Получаем ID из строки
+
+    let fullName = row.find(".full-name").val().trim();
+    let rowBush = row.find(".row-bush").val().trim();
+    let greenOperations = row.find(".green-operations").val().trim();
+    let soilOperations = row.find(".soil-operations").val().trim();
+    let fertilizerOperations = row.find(".fertilizer-operations").val().trim();
+    let comments = row.find(".comments").val().trim();
+
+    // Удаление строки, если все поля пустые и есть ID
+    if (
+        id !== "" &&
+        fullName === "" &&
+        rowBush === "" &&
+        greenOperations === "" &&
+        soilOperations === "" &&
+        fertilizerOperations === "" &&
+        comments === ""
+    ) {
+        $.ajax({
+            url: "/field-journal/delete/" + id,
+            type: "DELETE",
+            data: {
+                _token: $('meta[name="csrf-token"]').attr("content"),
+            },
+            success: function (response) {
+                row.find(".photo-preview").empty();
+                let photoInput = row.find(".photo-upload");
+                photoInput.removeClass("hidden");
+                photoInput.val("");
+                $("#photo-modal").addClass("hidden");
+                row.find(".field-id").data("db-id", "");
+                row.find(".created-at").text("");
+                row.find("input, textarea").val("");
+                console.log("Запись удалена");
+            },
+            error: function (xhr, status, error) {
+                console.log("Ошибка удаления записи: ", error);
+            },
+        });
+    }
+
+    // Создание новой записи, если ID пустой и данные введены, и операция не обрабатывается
+    if (
+        id === "" &&
+        !isProcessing &&
+        (fullName !== "" ||
+            rowBush !== "" ||
+            greenOperations !== "" ||
+            soilOperations !== "" ||
+            fertilizerOperations !== "" ||
+            comments !== "")
+    ) {
+        isProcessing = true; // Блокируем повторное создание
+        $.ajax({
+            url: "/field-journal/create",
+            type: "POST",
+            data: {
+                _token: $('meta[name="csrf-token"]').attr("content"),
+                full_name: fullName,
+                row_bush: rowBush,
+                green_operations: greenOperations,
+                soil_operations: soilOperations,
+                fertilizer_operations: fertilizerOperations,
+                comments: comments,
+            },
+            success: function (response) {
+                // Присваиваем новый ID строке
+                row.find(".field-id").data("db-id", response.id);
+                row.find(".created-at").text(response.created_at);
+                console.log("Новая запись создана");
+            },
+            error: function (xhr, status, error) {
+                console.log("Ошибка создания записи: ", error);
+            },
+            complete: function () {
+                isProcessing = false; // Разблокируем после завершения
+            },
+        });
+    }
+
+    // Обновление записи, если есть ID и операция не обрабатывается
+    if (id !== "" && !isProcessing) {
+        $.ajax({
+            url: "/field-journal/update/" + id,
+            type: "POST",
+            data: {
+                _token: $('meta[name="csrf-token"]').attr("content"),
+                full_name: fullName,
+                row_bush: rowBush,
+                green_operations: greenOperations,
+                soil_operations: soilOperations,
+                fertilizer_operations: fertilizerOperations,
+                comments: comments,
+            },
+            success: function (response) {
+                console.log("Запись обновлена");
+            },
+            error: function (xhr, status, error) {
+                console.log("Ошибка обновления записи: ", error);
+            },
+        });
+    }
+});
+
+// Обработка загрузки фото
+$(".photo-upload").on("change", function () {
+    let row = $(this).closest("tr");
+    let id = row.find(".field-id").data("db-id");
+    let formData = new FormData();
+    formData.append("photo", this.files[0]);
+    formData.append("_token", $('meta[name="csrf-token"]').attr("content"));
+
+    $.ajax({
+        url: "/field-journal/upload-photo/" + id,
+        type: "POST",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            // Прячем инпут загрузки и отображаем превью
+            row.find(".photo-upload").addClass("hidden");
+            row.find(".photo-preview").html(
+                `<img src="${response.photo}" class="w-16 h-16 object-cover cursor-pointer">`
+            );
+        },
+        error: function (xhr) {
+            console.log("Ошибка загрузки фото:", xhr);
+        },
+    });
+});
+
+// Открытие модального окна для фото
+$(document).on("click", ".photo-preview img", function () {
+    let imgSrc = $(this).attr("src");
+    let row = $(this).closest("tr");
+    let id = row.find(".field-id").data("db-id");
+
+    $("#modal-photo").attr("src", imgSrc);
+    $("#photo-modal").removeClass("hidden");
+
+    // Замена фото
+    $("#replace-photo-input").on("change", function () {
+        let formData = new FormData();
+        formData.append("photo", this.files[0]);
+        formData.append("_token", $('meta[name="csrf-token"]').attr("content"));
+
+        $.ajax({
+            url: "/field-journal/upload-photo/" + id,
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                row.find(".photo-preview img").attr("src", response.photo);
+                $("#modal-photo").attr("src", response.photo);
+            },
+            error: function (xhr) {
+                console.log("Ошибка замены фото:", xhr);
+            },
+        });
+    });
+
+    // Удаление фото
+    $("#delete-photo-btn").on("click", function () {
+        $.ajax({
+            url: "/field-journal/delete-photo/" + id,
+            type: "DELETE",
+            data: {
+                _token: $('meta[name="csrf-token"]').attr("content"),
+            },
+            success: function (response) {
+                row.find(".photo-preview").empty();
+                let photoInput = row.find(".photo-upload");
+                photoInput.removeClass("hidden");
+                photoInput.val("");
+                $("#photo-modal").addClass("hidden");
+            },
+            error: function (xhr) {
+                console.log("Ошибка удаления фото:", xhr);
+            },
+        });
+    });
+});
+
+// Закрытие модального окна
+$("#photo-modal").on("click", function (e) {
+    if (e.target === this) {
+        $(this).addClass("hidden");
+    }
+});
