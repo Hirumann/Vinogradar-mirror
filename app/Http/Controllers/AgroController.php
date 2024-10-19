@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use App\Models\Task;
+use App\Models\AgroPlanOperationRef;
 use Illuminate\Http\Request;
 
 class AgroController extends Controller
@@ -33,9 +34,14 @@ class AgroController extends Controller
                         ->where('user_id', auth()->id()) // Учет пользователя
                         ->get();
 
+        $direct = AgroPlanOperationRef::where('start_date', '<=', $date)
+                        ->where('end_date', '>=', $date)
+                        ->get();
+
         return response()->json([
             'events' => $events,
             'tasks' => $tasks,
+            'direct' => $direct,
         ]);
     }
 
@@ -107,6 +113,29 @@ class AgroController extends Controller
         return response()->json(['success' => true]);
     }
 
+    public function addDirect(Request $request)
+    {
+        $operations = $request->input('selectedRows'); 
+        $startDate = $request->input('start_date'); 
+        $endDate = $request->input('end_date'); 
+
+        if (!empty($operations) && !empty($startDate)) {
+            foreach ($operations as $operation) {
+                AgroPlanOperationRef::create([
+                    'name' => $operation['name'],
+                    'reference_table' => $operation['tableName'],
+                    'reference_row_id' => $operation['rowId'],  // Имя таблицы справочника
+                    'start_date' => date('Y-m-d', strtotime($startDate)),
+                    'end_date' => date('Y-m-d', strtotime($endDate)),
+                ]);
+            }
+        } else {
+            return response()->json(['error' => 'No data provided'], 400);
+        }
+
+        return response()->json(['success' => true]);
+    }
+
     public function deleteEvent($id)
     {
         $event = Event::where('id', $id)
@@ -133,6 +162,20 @@ class AgroController extends Controller
         }
 
         $task->delete();
+
+        return response()->json(['success' => true]);
+    }
+
+    public function deleteDirect($id)
+    {
+        $direct = AgroPlanOperationRef::where('id', $id)
+                  ->first();
+
+        if (!$direct) {
+            return response()->json(['error' => 'Event not found'], 404);
+        }
+
+        $direct->delete();
 
         return response()->json(['success' => true]);
     }
@@ -177,6 +220,26 @@ class AgroController extends Controller
         return response()->json(['success' => true, 'message' => 'Диапазон плановой работы обновлен']);
     }
 
+    public function setDirectRange(Request $request, $id)
+    {
+        $direct = AgroPlanOperationRef::findOrFail($id);
+
+        $data = $request->validate([
+            'start_date' => ['required','date'],
+            'end_date' => ['required','date'],
+        ]);
+
+        if (!empty($data)) {
+                $direct->start_date = date('Y-m-d', strtotime($data['start_date']));
+                $direct->end_date = date('Y-m-d', strtotime($data['end_date']));
+                $direct->save();
+        } else {
+            return response()->json(['error' => 'No data provided'], 400);
+        }
+
+        return response()->json(['success' => true, 'message' => 'Диапазон плановой работы обновлен']);
+    }
+
     public function getEventRange($id)
     {
         
@@ -196,6 +259,21 @@ class AgroController extends Controller
     {
         
         $item = Task::find($id);
+
+        if (!$item) {
+            return response()->json(['error' => 'Item not found'], 404);
+        }
+
+        return response()->json([
+            'start_date' => $item->start_date,
+            'end_date' => $item->end_date
+        ]);
+    }
+
+    public function getDirectRange($id)
+    {
+        
+        $item = AgroPlanOperationRef::find($id);
 
         if (!$item) {
             return response()->json(['error' => 'Item not found'], 404);

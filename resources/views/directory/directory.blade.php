@@ -80,8 +80,34 @@
                 <!-- Список мероприятий будет отображаться здесь -->
             </ul>
             <button id="add-operation-btn">Добавить мероприятие</button>
-            <button id="close-modal-btn">Закрыть</button>
         </div>
+    </div>
+
+
+    <div id="tableModal" class="fixed inset-0 backdrop-blur-sm hidden justify-center items-center">
+        <div class="modal-content flex justify-between items-center w-4/5">
+            <button id="closeModal">Закрыть</button>
+            <div class="w-1/5">
+                <h2>Выберите таблицу</h2>
+                <ul id="tableList">
+                    {{-- Список таблиц будет добавлен динамически через jQuery --}}
+                </ul>
+            </div>
+            
+            <div id="dynamicTableContainer" class="hidden flex-col justify-start items-center w-4/5">
+                <table id="dynamicTable">
+                    <thead>
+                        <tr>
+                            {{-- Заголовки столбцов будут добавлены динамически через jQuery --}}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{-- Данные таблицы будут добавлены динамически через jQuery --}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <button id="saveSelection" data-id="">Сохранить</button>
     </div>
     <div id="storage" data-storage="{{ asset('storage/') }}"></div>
 </div>

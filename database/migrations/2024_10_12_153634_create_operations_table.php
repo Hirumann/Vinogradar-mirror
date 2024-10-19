@@ -11,8 +11,9 @@ return new class extends Migration
         Schema::create('operations', function (Blueprint $table) {
             $table->id();  // Уникальный ID для каждого мероприятия
             $table->unsignedBigInteger('row_id');  // ID строки (связывается с таблицей "Фенофазы" или другими таблицами)
-            $table->string('table_name');  
-            $table->string('name');  // Название мероприятия
+            $table->unsignedBigInteger('row_id_other');
+            $table->string('name')->nullable();  
+            $table->string('table_name');   
             $table->timestamps();  // Метки времени для создания и обновления мероприятия
         });
     }

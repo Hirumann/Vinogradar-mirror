@@ -9,7 +9,13 @@ class Operation extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['row_id', 'table_name', 'name', 'row_type'];
+    protected $fillable = [
+        'row_id',
+        'row_id_other',
+        'name',
+        'table_name',
+        'row_type',
+    ];
 
     // Связь с моделью строки (например, Phenophase)
     public function row()

@@ -285,32 +285,46 @@ $(document).ready(function () {
             success: function (response) {
                 let events = response.events;
                 let tasks = response.tasks;
+                let direct = response.direct;
 
                 $("#event-list").empty();
                 $("#task-list").empty();
+                $("#direct-list").empty();
 
                 events.forEach((event) => {
                     $("#event-list").append(`
-                    <li class="flex justify-between items-center w-full px-4 mb-2 bg-white rounded-[8px] text-black text-[20px]">
-                        <p class="w-2/3 break-words">${event.name}</p>
-                        <div class="w-1/4 flex justify-between items-center">
-                            <button class="set-range bg-[#00CC66] rounded-md w-[23px] h-[23px] flex justify-center items-center" data-id="${event.id}" data-type="event">${window.calendarIcon}</button>
-                            <button class="delete-event w-[21px] h-[21px]" data-id="${event.id}">${window.bucketIcon}</button>
-                        </div>
-                    </li>
-                `);
+                        <li class="flex justify-between items-center w-full px-4 mb-2 bg-white rounded-[8px] text-black text-[20px]">
+                            <p class="w-2/3 break-words">${event.name}</p>
+                            <div class="w-1/4 flex justify-between items-center">
+                                <button class="set-range bg-[#00CC66] rounded-md w-[23px] h-[23px] flex justify-center items-center" data-id="${event.id}" data-type="event">${window.calendarIcon}</button>
+                                <button class="delete-event w-[21px] h-[21px]" data-id="${event.id}">${window.bucketIcon}</button>
+                            </div>
+                        </li>
+                    `);
                 });
 
                 tasks.forEach((task) => {
                     $("#task-list").append(`
-                    <li class="flex justify-between items-center w-full px-4 mb-2 bg-white rounded-[8px] text-black text-[20px]">
-                        <p class="w-2/3 break-words">${task.name}</p>
-                        <div class="w-1/4 flex justify-between items-center">
-                            <button class="set-range bg-[#00CC66] rounded-md w-[23px] h-[23px] flex justify-center items-center" data-id="${task.id}" data-type="task">${window.calendarIcon}</button>
-                            <button class="delete-task w-[21px] h-[21px]" data-id="${task.id}">${window.bucketIcon}</button>
-                        </div>
-                    </li>
-                `);
+                        <li class="flex justify-between items-center w-full px-4 mb-2 bg-white rounded-[8px] text-black text-[20px]">
+                            <p class="w-2/3 break-words">${task.name}</p>
+                            <div class="w-1/4 flex justify-between items-center">
+                                <button class="set-range bg-[#00CC66] rounded-md w-[23px] h-[23px] flex justify-center items-center" data-id="${task.id}" data-type="task">${window.calendarIcon}</button>
+                                <button class="delete-task w-[21px] h-[21px]" data-id="${task.id}">${window.bucketIcon}</button>
+                            </div>
+                        </li>
+                    `);
+                });
+
+                direct.forEach((directElement) => {
+                    $("#direct-list").append(`
+                        <li class="flex justify-between items-center w-full px-4 mb-2 bg-white rounded-[8px] text-black text-[20px]">
+                            <p class="w-2/3 break-words">${directElement.name}</p>
+                            <div class="w-1/4 flex justify-between items-center">
+                                <button class="set-range bg-[#00CC66] rounded-md w-[23px] h-[23px] flex justify-center items-center" data-id="${directElement.id}" data-type="direct">${window.calendarIcon}</button>
+                                <button class="delete-direct w-[21px] h-[21px]" data-id="${directElement.id}">${window.bucketIcon}</button>
+                            </div>
+                        </li>
+                    `);
                 });
             },
         });
@@ -334,6 +348,151 @@ $(document).ready(function () {
             .hide()
             .fadeIn(300);
         $("#task-name-input").trigger("focus");
+    });
+
+    $("#add-direct").on("click", function () {
+        $.ajax({
+            url: "/get-table-list", // Роут для получения списка таблиц
+            method: "GET",
+            data: {
+                _token: $('meta[name="csrf-token"]').attr("content"),
+            },
+            success: function (tables) {
+                $("#tableList").empty(); // Очищаем старый список
+
+                // Добавляем таблицы в список
+                Object.entries(tables).forEach(function ([key, value]) {
+                    $("#tableList").append(
+                        `<li class="table-item" data-table="${key}">${value}</li>`
+                    );
+                });
+
+                // Открываем модальное окно
+                $("#tableModal")
+                    .removeClass("hidden")
+                    .addClass("flex")
+                    .hide()
+                    .fadeIn(300);
+                $(".table-item").first().trigger("click");
+            },
+        });
+    });
+
+    $(document).on("click", ".table-item", function () {
+        let tableName = $(this).data("table");
+        $(".table-item").removeClass("active");
+        $(this).addClass("active");
+
+        // Получаем данные выбранной таблицы
+        $.ajax({
+            url: "/get-table-data",
+            method: "POST",
+            data: {
+                table: tableName,
+                _token: $('meta[name="csrf-token"]').attr("content"),
+            },
+            success: function (response) {
+                let columns = response.columns;
+                let data = response.data;
+
+                // Очищаем старые данные
+                $("#dynamicTable thead tr").empty();
+                $("#dynamicTable tbody").empty();
+
+                // Добавляем заголовки
+                $("#dynamicTable thead tr").append("<th></th>"); // Заголовок для чекбокса
+                columns.forEach(function (column) {
+                    $("#dynamicTable thead tr").append(
+                        "<th>" + column + "</th>"
+                    );
+                });
+
+                // Добавляем данные
+                data.forEach(function (row) {
+                    const values = Object.values(row).slice(0, -2); // Получаем все элементы, кроме последних двух
+                    let rowHtml = "<tr>";
+                    rowHtml +=
+                        '<td><input type="checkbox" class="row-select" data-row-id="' +
+                        row.id +
+                        '"></td>'; // Чекбокс для выбора
+                    values.forEach(function (rowElement) {
+                        if (rowElement) {
+                            rowHtml += "<td>" + rowElement + "</td>";
+                        } else {
+                            rowHtml += "<td></td>";
+                        }
+                    });
+                    rowHtml += "<td></td>";
+                    rowHtml += "</tr>";
+                    $("#dynamicTable tbody").append(rowHtml);
+                });
+
+                // Показываем таблицу
+                $("#dynamicTableContainer")
+                    .removeClass("hidden")
+                    .addClass("flex")
+                    .hide()
+                    .fadeIn(300);
+            },
+        });
+    });
+
+    $("#saveSelectionAgro").on("click", function () {
+        let selectedRows = [];
+        let tableName = $("#tableList .table-item.active").data("table");
+
+        // Получаем все выбранные строки
+        $(".row-select:checked").each(function () {
+            const rowIdOther = $(this).data("row-id");
+            const rowName = $(this).closest("tr").find("td:eq(2)").text();
+
+            selectedRows.push({
+                name: rowName,
+                tableName: tableName,
+                rowId: rowIdOther,
+            }); // Сохраняем id выбранной строки
+        });
+
+        console.log(selectedRows);
+
+        if (selectedRows.length === 0) {
+            alert("Выберите хотя бы одно мероприятие!");
+            return;
+        }
+
+        // Отправляем выбранные строки на сервер
+        $.ajax({
+            url: `/add-direct`, // Не забудьте обновить путь
+            method: "POST",
+            data: {
+                selectedRows: selectedRows,
+                start_date: $("#modal-date").text(),
+                end_date: $("#modal-date").text(),
+                _token: $('meta[name="csrf-token"]').attr("content"),
+            },
+            success: function (response) {
+                loadModalData($("#modal-date").text());
+                closeModal("#tableModal"); // Закрываем модальное окно
+                closeModal("#dynamicTableContainer"); // Закрываем модальное окно
+            },
+            error: function (err) {
+                console.error("Error saving selection:", err);
+            },
+        });
+    });
+
+    $("#tableModal").on("click", function (e) {
+        if (e.target === this) {
+            closeModal("#tableModal");
+            closeModal("#dynamicTableContainer");
+        }
+    });
+
+    $("#dynamicTableContainer").on("click", function (e) {
+        if (e.target === this) {
+            closeModal("#tableModal");
+            closeModal("#dynamicTableContainer");
+        }
     });
 
     $("#event-modal").on("click", function (event) {
@@ -435,6 +594,22 @@ $(document).ready(function () {
         let taskId = $(this).data("id");
         $.ajax({
             url: `/delete-task/${taskId}`,
+            method: "DELETE",
+            data: { _token: $('meta[name="csrf-token"]').attr("content") },
+            success: function () {
+                loadModalData($("#modal-date").text());
+                renderCalendar(
+                    currentDate.getFullYear(),
+                    currentDate.getMonth()
+                );
+            },
+        });
+    });
+
+    $(document).on("click", ".delete-direct", function () {
+        let directId = $(this).data("id");
+        $.ajax({
+            url: `/delete-direct/${directId}`,
             method: "DELETE",
             data: { _token: $('meta[name="csrf-token"]').attr("content") },
             success: function () {
@@ -1422,6 +1597,8 @@ $(document).ready(function () {
         let tableName = $(".table-btn.active").data("table"); // Имя текущей таблицы
         let currentRowId; // ID текущей строки, для которой открыто модальное окно
 
+        let operCurrentRow = 0;
+
         let startDateDirect = null;
         let endDateDirect = null;
         let numberOfClicksDirect = 0;
@@ -1784,8 +1961,13 @@ $(document).ready(function () {
             });
         }
 
+        $(document).on("click", ".agro-operations-cell", function () {
+            const rowId = $(this).closest("tr").data("id");
+            openAgroModal(rowId);
+        });
+
         function openAgroModal(rowId) {
-            currentRowId = rowId;
+            operCurrentRow = currentRowId = rowId;
             $("#modal-agro-operations")
                 .removeClass("hidden")
                 .addClass("flex")
@@ -1815,36 +1997,9 @@ $(document).ready(function () {
             });
         }
 
-        $("#close-modal-btn").on("click", function () {
-            closeModal("#modal-agro-operations");
-        });
-
-        $("#add-operation-btn").on("click", function () {
-            const newOperation = prompt("Введите название мероприятия:");
-            if (!newOperation.trim()) {
-                alert("Название мероприятия не может быть пустым!");
-                return;
-            }
-
-            if (newOperation) {
-                $.ajax({
-                    url: `/directory/${tableName}/${currentRowId}/operations/add`,
-                    method: "POST",
-                    data: {
-                        name: newOperation,
-                        _token: $('meta[name="csrf-token"]').attr("content"),
-                    },
-                    success: function (response) {
-                        openAgroModal(currentRowId); // Обновляем список мероприятий
-                        const operationsCount = response.operations.length;
-                        $(
-                            `tr[data-id="${currentRowId}"] .agro-operations-cell`
-                        ).text(`мероприятия - ${operationsCount}`);
-                    },
-                    error: function (err) {
-                        console.error("Error adding operation:", err);
-                    },
-                });
+        $("#modal-agro-operations").on("click", function (e) {
+            if (e.target === this) {
+                closeModal("#modal-agro-operations");
             }
         });
 
@@ -1868,11 +2023,6 @@ $(document).ready(function () {
                     console.error("Error deleting operation:", err);
                 },
             });
-        });
-
-        $(document).on("click", ".agro-operations-cell", function () {
-            const rowId = $(this).closest("tr").data("id");
-            openAgroModal(rowId);
         });
 
         // Добавить пустую строку
@@ -2219,6 +2369,84 @@ $(document).ready(function () {
                 },
                 error: function (xhr) {
                     alert("Ошибка удаления фото");
+                },
+            });
+        });
+
+        $(document).on("click", "#add-operation-btn", function () {
+            let rowId = operCurrentRow;
+            $.ajax({
+                url: "/get-table-list", // Роут для получения списка таблиц
+                method: "GET",
+                data: {
+                    _token: $('meta[name="csrf-token"]').attr("content"),
+                },
+                success: function (tables) {
+                    $("#tableList").empty(); // Очищаем старый список
+
+                    // Добавляем таблицы в список
+                    Object.entries(tables).forEach(function ([key, value]) {
+                        $("#tableList").append(
+                            `<li class="table-item" data-table="${key}">${value}</li>`
+                        );
+                    });
+
+                    // Открываем модальное окно
+                    $("#tableModal")
+                        .removeClass("hidden")
+                        .addClass("flex")
+                        .hide()
+                        .fadeIn(300);
+                    $(".table-item").first().trigger("click");
+                },
+            });
+            $("#saveSelection").attr("data-id", rowId);
+        });
+
+        // Сохранение выбранных данных (если нужно)
+        $("#saveSelection").on("click", function () {
+            let currentRowId = $(this).data("id");
+            let tableName = $(".table-btn.active").data("table");
+            let selectedRows = [];
+
+            // Получаем все выбранные строки
+            $(".row-select:checked").each(function () {
+                const rowIdOther = $(this).data("row-id");
+                const rowName = $(this).closest("tr").find("td:eq(2)").text();
+
+                selectedRows.push({
+                    id: rowIdOther,
+                    name: rowName,
+                }); // Сохраняем id выбранной строки
+            });
+
+            if (selectedRows.length === 0) {
+                alert("Выберите хотя бы одно мероприятие!");
+                return;
+            }
+
+            console.log(selectedRows);
+
+            // Отправляем выбранные строки на сервер
+            $.ajax({
+                url: `/directory/${tableName}/${currentRowId}/operations/add`, // Не забудьте обновить путь
+                method: "POST",
+                data: {
+                    selectedRows: selectedRows,
+                    rowId: currentRowId,
+                    _token: $('meta[name="csrf-token"]').attr("content"),
+                },
+                success: function (response) {
+                    const operationsCount = response.operations.length;
+                    $(
+                        `tr[data-id="${currentRowId}"] .agro-operations-cell`
+                    ).text(`мероприятия - ${operationsCount}`);
+                    openAgroModal(currentRowId);
+                    closeModal("#tableModal"); // Закрываем модальное окно
+                    closeModal("#dynamicTableContainer"); // Закрываем модальное окно
+                },
+                error: function (err) {
+                    console.error("Error saving selection:", err);
                 },
             });
         });

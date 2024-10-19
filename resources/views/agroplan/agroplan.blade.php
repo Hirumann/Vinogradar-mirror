@@ -72,17 +72,25 @@
                 <div id="modal-content" class="w-72 h-[570px] flex flex-col justify-start items-center bg-[#80E5B3] px-6 py-2 rounded-lg shadow-lg max-w-xl mt-20 relative">
                     <h2 id="modal-date" class="hidden"></h2>
                     <h3 class="font-semibold mb-2 text-[11px]">события</h3>
-                    <div id="modal-events" class="max-h-32 w-full overflow-y-scroll">
+                    <div id="modal-events" class="max-h-32 w-full overflow-y-auto">
                         
                         <ul id="event-list" class="w-full"></ul>
                     </div>
                     <button id="add-event" class="w-[25px] h-[25px] pb-[3px] mb-4 bg-[#00CC6680] rounded-full text-black font-bold text-[20px] leading-none">+</button>
+                    
                     <h3 class="font-semibold mb-2 text-[11px]">плановые работы</h3>
-                    <div id="modal-tasks" class="max-h-32 w-full overflow-y-scroll">
+                    <div id="modal-tasks" class="max-h-32 w-full overflow-y-auto">
                         
                         <ul id="task-list" class="w-full"></ul>
                     </div>
                     <button id="add-task" class="w-[25px] h-[25px] pb-[3px] mb-4 bg-[#00CC6680] rounded-full text-black font-bold text-[20px] leading-none">+</button>
+                    
+                    <h3 class="font-semibold mb-2 text-[11px]">данные из справочника</h3>
+                    <div id="modal-direct" class="max-h-32 w-full overflow-y-auto">
+                        
+                        <ul id="direct-list" class="w-full"></ul>
+                    </div>
+                    <button id="add-direct" class="w-[25px] h-[25px] pb-[3px] mb-4 bg-[#00CC6680] rounded-full text-black font-bold text-[20px] leading-none">+</button>
                 </div>
             </div>
 
@@ -125,6 +133,32 @@
                         
                     </div>
                 </div>
+            </div>
+
+            <div id="tableModal" class="fixed inset-0 backdrop-blur-sm hidden justify-center items-center">
+                <div class="modal-content flex justify-between items-center w-4/5">
+                    <button id="closeModal">Закрыть</button>
+                    <div class="w-1/5">
+                        <h2>Выберите таблицу</h2>
+                        <ul id="tableList">
+                            {{-- Список таблиц будет добавлен динамически через jQuery --}}
+                        </ul>
+                    </div>
+                    
+                    <div id="dynamicTableContainer" class="hidden flex-col justify-start items-center w-4/5">
+                        <table id="dynamicTable">
+                            <thead>
+                                <tr>
+                                    {{-- Заголовки столбцов будут добавлены динамически через jQuery --}}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{-- Данные таблицы будут добавлены динамически через jQuery --}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <button id="saveSelectionAgro" data-id="">Сохранить</button>
             </div>
         </div>
     </div>

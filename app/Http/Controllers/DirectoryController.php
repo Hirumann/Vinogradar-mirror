@@ -331,19 +331,22 @@ class DirectoryController extends Controller
 
     public function addOperation(Request $request, $table, $rowId)
     {
-        // Проверяем, существует ли таблица
         if (Schema::hasTable($table)) {
             // Проверяем, есть ли модель для данной таблицы
             if (isset($this->models[$table])) {
                 $rowType = $this->models[$table];
 
                 // Создаем операцию с указанием row_type
-                Operation::create([
-                    'row_id' => $rowId,
-                    'row_type' => $rowType,
-                    'table_name' => $table,
-                    'name' => $request->input('name')
-                ]);
+                $input = $request->all();
+                foreach ($input['selectedRows'] as $key => $value) {
+                    Operation::create([
+                        'row_id' => $rowId,
+                        'row_id_other' => $value['id'],
+                        'name' => $value['name'],
+                        'row_type' => $rowType,
+                        'table_name' => $table,
+                    ]);
+                }
 
                 // Получаем обновленный список операций
                 $operations = Operation::where('row_id', $rowId)
@@ -481,4 +484,35 @@ class DirectoryController extends Controller
         return response()->json(['error' => 'Photo not found'], 404);
     }
 
+    public function showTableSelectionModal()
+    {
+        $tables = [
+            'phenophases' => 'Фенофазы',
+            'agro_operations' => "Агрооперации",
+            'meteodatas' => "Метеоданные",
+            'climatic_parametres' => "Климатически параметры",
+            'plotdatas' => "Данные по участку",
+            'sorts' => "Сорта",
+            'sicks' => "Болезни",
+            'people' => "Люди",
+            'func_needs' => "Функциональные обязанности",
+            'green_defends' => "Защита растений",
+        ];
+
+        return response()->json($tables);
+    }
+
+    public function getTableData(Request $request)
+    {
+        $tableName = $request->input('table');  // Получаем название таблицы
+        $tableConfig = $this->tablesConfig[$tableName] ?? abort(404, 'Таблица не найдена');
+        $headerMapping = $tableConfig['mapping'];
+        $columns = array_keys($headerMapping);
+        $data = DB::table($tableName)->get(); // Получаем данные
+
+        return response()->json([
+            'columns' => $columns,
+            'data' => $data
+        ]);
+    }
 }
