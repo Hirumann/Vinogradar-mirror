@@ -48,18 +48,22 @@ Route::get('/calendar-data/{year}/{month}', [AgroController::class, 'getCalendar
 // Routes for add event and task
 Route::post('/add-event', [AgroController::class, 'addEvent']);
 Route::post('/add-task', [AgroController::class, 'addTask']);
+Route::post('/add-direct', [AgroController::class, 'addDirect']);
 
 // Routes for delete event and task
 Route::delete('/delete-event/{id}', [AgroController::class, 'deleteEvent'])->name('delete-event');
 Route::delete('/delete-task/{id}', [AgroController::class, 'deleteTask'])->name('delete-task');
+Route::delete('/delete-direct/{id}', [AgroController::class, 'deleteDirect'])->name('delete-direct');
 
 // Routes for update event and task range
 Route::post('/set-event-range/{id}', [AgroController::class, 'setEventRange']);
 Route::post('/set-task-range/{id}', [AgroController::class, 'setTaskRange']);
+Route::post('/set-direct-range/{id}', [AgroController::class, 'setDirectRange']);
 
 // Routes for get event and task range
 Route::get('/get-event-range/{id}', [AgroController::class, 'getEventRange']);
 Route::get('/get-task-range/{id}', [AgroController::class, 'getTaskRange']);
+Route::get('/get-direct-range/{id}', [AgroController::class, 'getDirectRange']);
 
 // Route to get Gantt data
 Route::get('/get-gantt-data', [AgroController::class, 'getGanttData']);
@@ -87,14 +91,17 @@ Route::delete('/directory/{tableName}/delete/{rowId}', [DirectoryController::cla
 Route::post('/directory/{tableName}/update/{id}', [DirectoryController::class, 'updateRow']);
 Route::get('/directory/{tableName}', [DirectoryController::class, 'getAllRows']);
 
-Route::get('/directory/{table}/{rowId}/operations', [DirectoryController::class, 'getOperations']);
-Route::post('/directory/{table}/{rowId}/operations/add', [DirectoryController::class, 'addOperation']);
-Route::delete('/directory/{table}/{rowId}/operations/delete/{operationId}', [DirectoryController::class, 'deleteOperation']);
-
 Route::get('/get-date-ranges/{table}/{rowId}', [DirectoryController::class, 'getDateRanges']);
 Route::post('/set-date-range/{table}/{rowId}', [DirectoryController::class, 'setDateRange']);
 Route::post('/remove-date-range/{table}/{rowId}/{rangeId}', [DirectoryController::class, 'removeDateRange']);
 
+Route::get('/directory/{table}/{rowId}/operations', [DirectoryController::class, 'getOperations']);
+Route::post('/directory/{table}/{rowId}/operations/add', [DirectoryController::class, 'addOperation']);
+Route::delete('/directory/{table}/{rowId}/operations/delete/{operationId}', [DirectoryController::class, 'deleteOperation']);
+
 Route::post('/upload-photo/{table}/{id}', [DirectoryController::class, 'uploadPhoto']);
 Route::delete('/delete-photo/{table}/{id}', [DirectoryController::class, 'deletePhoto']);
+
+Route::get('/get-table-list', [DirectoryController::class, 'showTableSelectionModal']);
+Route::post('/get-table-data', [DirectoryController::class, 'getTableData']);
 
